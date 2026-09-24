@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="Window1" Height="450" Width="800">
     <Grid>
-        
+        <Button x:Name="botaologar" Content="Login" HorizontalAlignment="Center" Height="37" Margin="0,329,0,0" VerticalAlignment="Top" Width="92" Click="botaologar_Click"/>
+        <TextBlock x:Name="textologin" Height="19" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" FontFamily="Segoe UI Variable Display Light" FontWeight="SemiBold"><Run Language="pt-br" Text="gmail"/></TextBlock>
+        <TextBlock x:Name="txtboxsenha" HorizontalAlignment="Center" Height="26" Margin="0,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178"><Run Language="pt-br" Text="Senha "/></TextBlock>
+        <TextBox x:Name="senha" HorizontalAlignment="Center" Height="21" Margin="0,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="21" Margin="0,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextChanged="TextBox_TextChanged"/>
+
     </Grid>
 </Window>

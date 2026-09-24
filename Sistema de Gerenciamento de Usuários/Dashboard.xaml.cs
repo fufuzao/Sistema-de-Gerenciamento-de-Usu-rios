@@ -14,20 +14,14 @@ using System.Windows.Shapes;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    /// Lógica interna para Window1.xaml
-
-    public partial class Window1 : Window
+    /// <summary>
+    /// Lógica interna para Dashboard.xaml
+    /// </summary>
+    public partial class Dashboard : Window
     {
-        public Window1()
+        public Dashboard()
         {
             InitializeComponent();
-        }
-
-        private void botaologar_Click(object sender, RoutedEventArgs e)
-        {
-            Dashboard dashboard = new Dashboard();
-            dashboard.Show();
-            this.Close();
         }
     }
 }
