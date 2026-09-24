@@ -1,17 +1,19 @@
-﻿<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.Window1"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.Window1"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
-    <Grid>
+        Title="Window1" Height="450" Width="800" Foreground="{x:Null}">
+    <Grid x:Name="telalogin" Background="#FF2F651C" >
         <Button x:Name="botaologar" Content="Login" HorizontalAlignment="Center" Height="37" Margin="0,329,0,0" VerticalAlignment="Top" Width="92" Click="botaologar_Click"/>
-        <TextBlock x:Name="textologin" Height="19" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" FontFamily="Segoe UI Variable Display Light" FontWeight="SemiBold"><Run Language="pt-br" Text="gmail"/></TextBlock>
-        <TextBlock x:Name="txtboxsenha" HorizontalAlignment="Center" Height="26" Margin="0,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178"><Run Language="pt-br" Text="Senha "/></TextBlock>
-        <TextBox x:Name="senha" HorizontalAlignment="Center" Height="21" Margin="0,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextChanged="TextBox_TextChanged"/>
-        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="21" Margin="0,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextChanged="TextBox_TextChanged"/>
+        <TextBlock x:Name="textologin" Height="19" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold" Background="#FF2F651C"><Run Language="pt-br" Text="Gmail"/></TextBlock>
+        <TextBlock x:Name="txtboxsenha" HorizontalAlignment="Center" Height="26" Margin="0,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold"><Run Language="pt-br" Text="Senha "/></TextBlock>
+        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="21" Margin="0,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" />
+
+        <ui:PasswordBox HorizontalAlignment="Center" Height="50" Margin="0,274,0,0" TextWrapping="Wrap" Text="PasswordBox" VerticalAlignment="Top" Width="178" TextChanged="PasswordBox_TextChanged"/>
 
     </Grid>
 </Window>

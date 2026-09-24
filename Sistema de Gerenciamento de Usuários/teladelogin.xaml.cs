@@ -29,5 +29,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             dashboard.Show();
             this.Close();
         }
+
+       
     }
 }

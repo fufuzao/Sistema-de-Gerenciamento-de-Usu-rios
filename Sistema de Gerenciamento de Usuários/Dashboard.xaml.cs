@@ -21,7 +21,9 @@ namespace Sistema_de_Gerenciamento_de_Usuários
     {
         public Dashboard()
         {
-            InitializeComponent();
+          
         }
+
+       
     }
 }
