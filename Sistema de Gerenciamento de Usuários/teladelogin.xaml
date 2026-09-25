@@ -11,9 +11,9 @@
         <Button x:Name="botaologar" Content="Login" HorizontalAlignment="Center" Height="37" Margin="0,329,0,0" VerticalAlignment="Top" Width="92" Click="botaologar_Click"/>
         <TextBlock x:Name="textologin" Height="19" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold" Background="#FF2F651C"><Run Language="pt-br" Text="Gmail"/></TextBlock>
         <TextBlock x:Name="txtboxsenha" HorizontalAlignment="Center" Height="26" Margin="0,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold"><Run Language="pt-br" Text="Senha "/></TextBlock>
-        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="21" Margin="0,196,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" />
+        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="42" Margin="0,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" />
 
-        <ui:PasswordBox HorizontalAlignment="Center" Height="50" Margin="0,274,0,0" TextWrapping="Wrap" Text="PasswordBox" VerticalAlignment="Top" Width="178" TextChanged="PasswordBox_TextChanged"/>
+        <ui:PasswordBox HorizontalAlignment="Center" Height="50" Margin="0,274,0,0" TextWrapping="Wrap" Text="PasswordBox" VerticalAlignment="Top" Width="222"/>
 
     </Grid>
 </Window>
