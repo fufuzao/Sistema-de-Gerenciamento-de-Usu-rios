@@ -22,6 +22,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         {
             InitializeComponent();
         }
+        // codigo do banco de dados
 
         private void botaologar_Click(object sender, RoutedEventArgs e)
         {
