@@ -9,6 +9,7 @@
         Title="Dashboard" Height="446" Width="800" Background="#FF019288">
 
     <Window.Resources>
+        <!-- ETIQUETA DE STATUS DO CARD -->
         <Style x:Key="EtiquetaStatus" TargetType="Border">
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="8,2"/>
@@ -24,6 +25,7 @@
             </Style.Triggers>
         </Style>
 
+        <!-- BOTOES DO CARD SO PARA ADMIN -->
         <Style x:Key="SoParaAdmin" TargetType="StackPanel">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding PodeEditar}" Value="False">
@@ -40,14 +42,79 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <!-- ESTILOS DOS FORMULARIOS -->
+        <Style x:Key="Titulo" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="11,10,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+
+        <Style x:Key="Rotulo" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,8,0,2"/>
+        </Style>
+
+        <Style x:Key="CampoTexto" TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#26FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CampoSenha" TargetType="PasswordBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#26FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="Mensagem" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+
+        <!-- ESTILOS DA TABELA DE AUDITORIA -->
+        <Style x:Key="CabecalhoGrid" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#33FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <Style x:Key="CelulaGrid" TargetType="DataGridCell">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#55FFFFFF"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Center" Width="780" Background="#FF019288">
 
-       
+        <!-- ================= BARRA LATERAL ================= -->
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="411" VerticalAlignment="Center" Width="141">
             <DockPanel>
-               
+                <!-- Usuario logado (rodape) -->
                 <Border DockPanel.Dock="Bottom" Background="#22FFFFFF" CornerRadius="8" Margin="5" Padding="5">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="36" Height="36">
@@ -61,20 +128,21 @@
                     </StackPanel>
                 </Border>
 
-            
+                <!-- Botoes -->
                 <StackPanel VerticalAlignment="Top" Margin="0,5,0,0">
                     <Button x:Name="listadeusuarios" Content="Usuários" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_2"/>
-                    <Button x:Name="cadastrousuario" Content="Cadastrar usuário" Height="40" Width="129" Margin="5,0,0,10"/>
-                    <Button x:Name="auditoria" Content="Auditoria" Height="40" Width="129" Margin="5,0,0,10"/>
+                    <Button x:Name="cadastrousuario" Content="Cadastrar usuário" Height="40" Width="129" Margin="5,0,0,10" Click="cadastrousuario_Click"/>
+                    <Button x:Name="auditoria" Content="Auditoria" Height="40" Width="129" Margin="5,0,0,10" Click="auditoria_Click"/>
                     <Button x:Name="redefinirsenha" Content="Redefinir senha" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_3"/>
-                    <Button x:Name="sair" Content="Sair" Height="40" Width="129" Margin="5,0,0,10"/>
+                    <Button x:Name="sair" Content="Sair" Height="40" Width="129" Margin="5,0,0,10" Click="sair_Click"/>
                 </StackPanel>
             </DockPanel>
         </Border>
 
-     
-        <Grid HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+        <!-- ================= TELA: LISTA DE USUARIOS ================= -->
+        <Grid x:Name="gridLista" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
 
+            <!-- Busca -->
             <Border Background="#26FFFFFF" CornerRadius="6" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="367">
                 <TextBox x:Name="txtBusca" Background="Transparent" BorderThickness="0"
                          Foreground="White" CaretBrush="White" FontSize="13"
@@ -82,6 +150,7 @@
                          TextChanged="AplicarFiltro"/>
             </Border>
 
+            <!-- Filtros -->
             <ComboBox x:Name="cmbPerfil" HorizontalAlignment="Left" Height="33" Margin="394,10,0,0" VerticalAlignment="Top" Width="109" SelectionChanged="AplicarFiltro">
                 <ComboBoxItem Content="Todos" IsSelected="True"/>
                 <ComboBoxItem Content="Administrador"/>
@@ -94,10 +163,10 @@
                 <ComboBoxItem Content="Bloqueado"/>
             </ComboBox>
 
-            
+            <!-- Contador -->
             <TextBlock x:Name="txtContador" Foreground="White" FontSize="12" Margin="11,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-           
+            <!-- Cards -->
             <ScrollViewer Margin="11,72,0,45" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="listaCards">
                     <ItemsControl.ItemsPanel>
@@ -146,12 +215,144 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            
+            <!-- Paginas -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8">
                 <Button x:Name="btnAnterior" Content="&lt;" Width="30" Height="28" Margin="3,0" Click="Anterior_Click"/>
                 <StackPanel x:Name="painelPaginas" Orientation="Horizontal"/>
                 <Button x:Name="btnProxima" Content="&gt;" Width="30" Height="28" Margin="3,0" Click="Proxima_Click"/>
             </StackPanel>
         </Grid>
+
+        <!-- ================= TELA: CADASTRO DE USUARIO ================= -->
+        <Grid x:Name="gridCadastro" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+            <TextBlock Text="Cadastrar usuário" Style="{StaticResource Titulo}"/>
+
+            <!-- Coluna esquerda -->
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="11,42,0,0">
+                <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
+                <TextBox x:Name="txtNomeCad" Style="{StaticResource CampoTexto}"/>
+
+                <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
+                <TextBox x:Name="txtUsuarioCad" Style="{StaticResource CampoTexto}"/>
+
+                <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
+                <TextBox x:Name="txtEmailCad" Style="{StaticResource CampoTexto}"/>
+
+                <TextBlock Text="Senha" Style="{StaticResource Rotulo}"/>
+                <PasswordBox x:Name="pwdSenhaCad" Style="{StaticResource CampoSenha}"/>
+
+                <TextBlock Text="Confirmação da senha" Style="{StaticResource Rotulo}"/>
+                <PasswordBox x:Name="pwdConfirmaCad" Style="{StaticResource CampoSenha}"/>
+            </StackPanel>
+
+            <!-- Coluna direita -->
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="320,42,0,0">
+                <TextBlock Text="Tipo de usuário" Style="{StaticResource Rotulo}"/>
+                <ComboBox x:Name="cmbTipoCad" Height="30" VerticalContentAlignment="Center">
+                    <ComboBoxItem Content="Administrador"/>
+                    <ComboBoxItem Content="Comum" IsSelected="True"/>
+                </ComboBox>
+
+                <TextBlock Text="Status" Style="{StaticResource Rotulo}"/>
+                <ComboBox x:Name="cmbStatusCad" Height="30" VerticalContentAlignment="Center">
+                    <ComboBoxItem Content="Ativo" IsSelected="True"/>
+                    <ComboBoxItem Content="Inativo"/>
+                </ComboBox>
+
+                <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
+                <ListBox x:Name="listaAvatares" Background="Transparent" BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="36" Height="36" Margin="2">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Content="Cadastrar" Width="140" Height="32" HorizontalAlignment="Left" Margin="0,12,0,0" Click="Cadastrar_Click"/>
+                <TextBlock x:Name="txtMsgCadastro" Style="{StaticResource Mensagem}"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ================= TELA: AUDITORIA ================= -->
+        <Grid x:Name="gridAuditoria" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+            <TextBlock Text="Auditoria" Style="{StaticResource Titulo}"/>
+
+            <ComboBox x:Name="cmbCategoria" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="130" Margin="481,10,0,0"
+                      VerticalContentAlignment="Center" SelectionChanged="FiltrarAuditoria">
+                <ComboBoxItem Content="Todos" IsSelected="True"/>
+                <ComboBoxItem Content="Alteração"/>
+                <ComboBoxItem Content="Autenticação"/>
+            </ComboBox>
+
+            <DataGrid x:Name="dgAuditoria" Margin="11,50,11,10"
+                      AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      HeadersVisibility="Column" GridLinesVisibility="None" RowHeaderWidth="0"
+                      Background="Transparent" BorderThickness="0" Foreground="White"
+                      RowBackground="#22FFFFFF" AlternatingRowBackground="#11FFFFFF"
+                      ColumnHeaderStyle="{StaticResource CabecalhoGrid}"
+                      CellStyle="{StaticResource CelulaGrid}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Data e hora" Binding="{Binding DataHora}" Width="105"/>
+                    <DataGridTextColumn Header="Usuário" Binding="{Binding Responsavel}" Width="70"/>
+                    <DataGridTextColumn Header="Operação" Binding="{Binding Operacao}" Width="*"/>
+                    <DataGridTextColumn Header="Registro" Binding="{Binding Registro}" Width="70"/>
+                    <DataGridTextColumn Header="Anterior" Binding="{Binding ValorAnterior}" Width="85"/>
+                    <DataGridTextColumn Header="Novo valor" Binding="{Binding NovoValor}" Width="95"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- ================= TELA: REDEFINIR SENHA ================= -->
+        <Grid x:Name="gridSenha" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+            <TextBlock Text="Redefinir senha" Style="{StaticResource Titulo}"/>
+
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Margin="11,42,0,0">
+
+                <!-- So admin: escolhe de quem e a senha -->
+                <StackPanel x:Name="painelUsuarioAlvo">
+                    <TextBlock Text="Usuário" Style="{StaticResource Rotulo}"/>
+                    <ComboBox x:Name="cmbUsuarioAlvo" Height="30" DisplayMemberPath="Nome" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <!-- So usuario comum: confirma a senha atual -->
+                <StackPanel x:Name="painelSenhaAtual" Visibility="Collapsed">
+                    <TextBlock Text="Senha atual" Style="{StaticResource Rotulo}"/>
+                    <PasswordBox x:Name="pwdAtual" Style="{StaticResource CampoSenha}"/>
+                </StackPanel>
+
+                <TextBlock Text="Nova senha" Style="{StaticResource Rotulo}"/>
+                <PasswordBox x:Name="pwdNova" Style="{StaticResource CampoSenha}"/>
+
+                <TextBlock Text="Confirmação da nova senha" Style="{StaticResource Rotulo}"/>
+                <PasswordBox x:Name="pwdConfirmaNova" Style="{StaticResource CampoSenha}"/>
+
+                <Button Content="Redefinir senha" Width="140" Height="32" HorizontalAlignment="Left" Margin="0,12,0,0" Click="RedefinirSenha_Click"/>
+                <TextBlock x:Name="txtMsgSenha" Style="{StaticResource Mensagem}"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ================= TELA: SAIR ================= -->
+        <Grid x:Name="gridSair" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+            <Border Background="#22FFFFFF" CornerRadius="10" Padding="24" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="Deseja realmente sair?" Foreground="White" FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Sim" Width="90" Height="32" Margin="4,0" Click="SairSim_Click"/>
+                        <Button Content="Cancelar" Width="90" Height="32" Margin="4,0" Click="SairNao_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
     </Grid>
 </Window>
