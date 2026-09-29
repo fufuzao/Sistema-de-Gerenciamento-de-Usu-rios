@@ -48,5 +48,10 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         {
 
         }
+
+        private void Anterior_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -7,26 +7,151 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.Dashboard"
         mc:Ignorable="d"
         Title="Dashboard" Height="446" Width="800" Background="#FF019288">
+
+    <Window.Resources>
+        <Style x:Key="EtiquetaStatus" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Background" Value="#CFD8DC"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="Ativo">
+                    <Setter Property="Background" Value="#C8E6C9"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Bloqueado">
+                    <Setter Property="Background" Value="#FFCDD2"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SoParaAdmin" TargetType="StackPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding PodeEditar}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SoSeBloqueado" TargetType="Button">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EstaBloqueado}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Center" Width="780" Background="#FF019288">
+
+       
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="411" VerticalAlignment="Center" Width="141">
-            <StackPanel HorizontalAlignment="Left" Height="400" VerticalAlignment="Center" Width="141">
-                <Button x:Name="listadeusuarios" Content="Lista de usuarios" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_2"/>
-                <Button x:Name="editusuarios" Content="Edit usuarios " Height="40" Width="129" Margin="5,0,0,10"/>
-                <Button x:Name="cadastrousuario" Content="Cadastro usuario" Height="40" Width="129" Margin="5,0,0,10"/>
-                <Button x:Name="auditoria" Content="Auditoria " Height="40" Width="129" Margin="5,0,0,10"/>
-                <Button x:Name="redefinirsenha" Content="Redefinir Senha" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_3"/>
-                <StackPanel Height="148" Width="133" Orientation="Horizontal">
-                    <Image x:Name="imagem_usuario_" Height="36" Width="38" Margin="0,111,0,0"/>
-                    <TextBox x:Name="nomeusuariotelainferior" Height="35" TextWrapping="Wrap" Text="TextBox" Width="96" Margin="0,112,0,0"/>
+            <DockPanel>
+               
+                <Border DockPanel.Dock="Bottom" Background="#22FFFFFF" CornerRadius="8" Margin="5" Padding="5">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="36" Height="36">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="imagem_usuario_" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="nomeusuariotelainferior" Text="Usuário" Foreground="White"
+                                   Width="75" Margin="6,0,0,0" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </Border>
+
+            
+                <StackPanel VerticalAlignment="Top" Margin="0,5,0,0">
+                    <Button x:Name="listadeusuarios" Content="Usuários" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_2"/>
+                    <Button x:Name="cadastrousuario" Content="Cadastrar usuário" Height="40" Width="129" Margin="5,0,0,10"/>
+                    <Button x:Name="auditoria" Content="Auditoria" Height="40" Width="129" Margin="5,0,0,10"/>
+                    <Button x:Name="redefinirsenha" Content="Redefinir senha" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_3"/>
+                    <Button x:Name="sair" Content="Sair" Height="40" Width="129" Margin="5,0,0,10"/>
                 </StackPanel>
-            </StackPanel>
+            </DockPanel>
         </Border>
+
+     
         <Grid HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
-            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="11,10,0,0" VerticalAlignment="Top" Width="367">
-                <TextBox HorizontalAlignment="Center" Height="46" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="368"/>
+
+            <Border Background="#26FFFFFF" CornerRadius="6" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="367">
+                <TextBox x:Name="txtBusca" Background="Transparent" BorderThickness="0"
+                         Foreground="White" CaretBrush="White" FontSize="13"
+                         Padding="10,0" VerticalContentAlignment="Center"
+                         TextChanged="AplicarFiltro"/>
             </Border>
-            <ComboBox HorizontalAlignment="Left" Height="33" Margin="394,10,0,0" VerticalAlignment="Top" Width="109"/>
-            <ComboBox HorizontalAlignment="Left" Height="33" Margin="517,11,0,0" VerticalAlignment="Top" Width="109"/>
+
+            <ComboBox x:Name="cmbPerfil" HorizontalAlignment="Left" Height="33" Margin="394,10,0,0" VerticalAlignment="Top" Width="109" SelectionChanged="AplicarFiltro">
+                <ComboBoxItem Content="Todos" IsSelected="True"/>
+                <ComboBoxItem Content="Administrador"/>
+                <ComboBoxItem Content="Comum"/>
+            </ComboBox>
+            <ComboBox x:Name="cmbStatus" HorizontalAlignment="Left" Height="33" Margin="517,10,0,0" VerticalAlignment="Top" Width="109" SelectionChanged="AplicarFiltro">
+                <ComboBoxItem Content="Todos" IsSelected="True"/>
+                <ComboBoxItem Content="Ativo"/>
+                <ComboBoxItem Content="Inativo"/>
+                <ComboBoxItem Content="Bloqueado"/>
+            </ComboBox>
+
+            
+            <TextBlock x:Name="txtContador" Foreground="White" FontSize="12" Margin="11,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+           
+            <ScrollViewer Margin="11,72,0,45" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="listaCards">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="140" Margin="0,0,10,10" Padding="8" Background="#22FFFFFF" CornerRadius="10">
+                                <StackPanel>
+                                    <Ellipse Width="50" Height="50" Margin="0,0,0,6">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding AvatarPath}" Stretch="UniformToFill"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+
+                                    <TextBlock Text="{Binding Nome}" Foreground="White" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Usuario}" Foreground="White" FontSize="12" Opacity="0.85" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Email}" Foreground="White" FontSize="11" Opacity="0.85" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,0,6"/>
+
+                                    <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,6">
+                                        <Border Background="#B2DFDB" CornerRadius="10" Padding="8,2" Margin="2">
+                                            <TextBlock Text="{Binding Tipo}" FontSize="11" Foreground="#004D40"/>
+                                        </Border>
+                                        <Border Style="{StaticResource EtiquetaStatus}">
+                                            <TextBlock Text="{Binding Status}" FontSize="11" Foreground="#263238"/>
+                                        </Border>
+                                    </WrapPanel>
+
+                                    <TextBlock Text="{Binding UltimoLogin}" Foreground="White" FontSize="10" Opacity="0.8" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,8"/>
+
+                                    <StackPanel Style="{StaticResource SoParaAdmin}">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="Editar" Width="58" Margin="2,0" Click="Editar_Click"/>
+                                            <Button Content="Excluir" Width="58" Margin="2,0" Click="Excluir_Click"/>
+                                        </StackPanel>
+                                        <Button Content="Desbloquear" Width="120" Margin="0,6,0,0"
+                                                Style="{StaticResource SoSeBloqueado}" Click="Desbloquear_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8">
+                <Button x:Name="btnAnterior" Content="&lt;" Width="30" Height="28" Margin="3,0" Click="Anterior_Click"/>
+                <StackPanel x:Name="painelPaginas" Orientation="Horizontal"/>
+                <Button x:Name="btnProxima" Content="&gt;" Width="30" Height="28" Margin="3,0" Click="Proxima_Click"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
