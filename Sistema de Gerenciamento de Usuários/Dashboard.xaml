@@ -1,8 +1,32 @@
-﻿<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.Dashboard"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.Dashboard"
         mc:Ignorable="d"
-        Title="Dashboard" Height="450" Width="800" Background="#FF2F651C"/>
+        Title="Dashboard" Height="446" Width="800" Background="#FF019288">
+    <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Center" Width="780" Background="#FF019288">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="411" VerticalAlignment="Center" Width="141">
+            <StackPanel HorizontalAlignment="Left" Height="400" VerticalAlignment="Center" Width="141">
+                <Button x:Name="listadeusuarios" Content="Lista de usuarios" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_2"/>
+                <Button x:Name="editusuarios" Content="Edit usuarios " Height="40" Width="129" Margin="5,0,0,10"/>
+                <Button x:Name="cadastrousuario" Content="Cadastro usuario" Height="40" Width="129" Margin="5,0,0,10"/>
+                <Button x:Name="auditoria" Content="Auditoria " Height="40" Width="129" Margin="5,0,0,10"/>
+                <Button x:Name="redefinirsenha" Content="Redefinir Senha" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_3"/>
+                <StackPanel Height="148" Width="133" Orientation="Horizontal">
+                    <Image x:Name="imagem_usuario_" Height="36" Width="38" Margin="0,111,0,0"/>
+                    <TextBox x:Name="nomeusuariotelainferior" Height="35" TextWrapping="Wrap" Text="TextBox" Width="96" Margin="0,112,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Grid HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="45" Margin="11,10,0,0" VerticalAlignment="Top" Width="367">
+                <TextBox HorizontalAlignment="Center" Height="46" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="368"/>
+            </Border>
+            <ComboBox HorizontalAlignment="Left" Height="33" Margin="394,10,0,0" VerticalAlignment="Top" Width="109"/>
+            <ComboBox HorizontalAlignment="Left" Height="33" Margin="517,11,0,0" VerticalAlignment="Top" Width="109"/>
+        </Grid>
+    </Grid>
+</Window>

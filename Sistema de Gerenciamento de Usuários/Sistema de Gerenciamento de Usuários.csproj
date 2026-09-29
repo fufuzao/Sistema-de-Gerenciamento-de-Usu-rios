@@ -89,9 +89,6 @@
     <Compile Include="Tela de Listagem de Usuários.xaml.cs">
       <DependentUpon>Tela de Listagem de Usuários.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tela Formulário de Redefinição de Senha.xaml.cs">
-      <DependentUpon>Tela Formulário de Redefinição de Senha.xaml</DependentUpon>
-    </Compile>
     <Compile Include="teladelogin.xaml.cs">
       <DependentUpon>teladelogin.xaml</DependentUpon>
     </Compile>
@@ -124,10 +121,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Tela de Listagem de Usuários.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tela Formulário de Redefinição de Senha.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
