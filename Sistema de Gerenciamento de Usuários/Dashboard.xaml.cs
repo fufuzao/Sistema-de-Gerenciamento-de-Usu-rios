@@ -268,7 +268,8 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
         private void SairSim_Click(object sender, RoutedEventArgs e)
         {
-            
+            teladelogin teladelogin = new teladelogin();
+            teladelogin.Show();
             this.Close();
         }
 
@@ -316,14 +317,15 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         {
             List<UsuarioCard> filtrados = ObterFiltrados();
 
-            // Math.Ceiling arredonda para cima; (double) transforma em decimal para a divisao nao arredondar sozinha
-            // PorPagina = numero fixo de usuarios por pagina; Math.Max garante que seja pelo menos 1
+            // Math.Ceiling arredonda para cima;
+            // (double) transforma em decimal para a divisao nao arredondar sozinha;
+            // PorPagina = numero fixo de usuarios por pagina; Math.Max garante que seja pelo menos 1;
             totalPaginas = Math.Max(1, (int)Math.Ceiling(filtrados.Count / (double)PorPagina));
 
-            // garante que a pagina atual existe
+            // garante que a pagina atual existe;
             paginaAtual = Math.Min(Math.Max(paginaAtual, 1), totalPaginas);
 
-            // pega so os usuarios da pagina atual
+            // pega so os usuarios da pagina atual;
             listaCards.ItemsSource = null;
             listaCards.ItemsSource = filtrados
                 .Skip((paginaAtual - 1) * PorPagina)
@@ -363,7 +365,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             btnProxima.Visibility = paginaAtual < totalPaginas ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // Clicou em um numero de pagina
+        //9
         private void BotaoPagina_Click(object sender, RoutedEventArgs e)
         {
             paginaAtual = (int)((Button)sender).Tag;
@@ -413,6 +415,11 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             UsuarioCard u = UsuarioDoBotao(sender);
 
             // Ainda nao tem tela de edicao. Quando tiver, abra ela aqui.
+            //
+            //
+            //
+            //
+            //
             MessageBox.Show("Editar: " + u.Nome);
         }
 
