@@ -17,17 +17,58 @@ using System.Windows.Shapes;
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
     // Dados que aparecem em cada card
-   
+    public class UsuarioCard
+    {
+        public int Id { get; set; }                     // BANCO DE DADOS: id do usuario na tabela
+        public string Nome { get; set; }
+        public string Usuario { get; set; }             // sempre com @ na frente
+        public string Email { get; set; }
+        public string Tipo { get; set; }                // "Administrador" ou "Comum"
+        public string Status { get; set; }              // "Ativo", "Inativo" ou "Bloqueado"
+        public string AvatarPath { get; set; }
+
+        // BANCO DE DADOS: estas tres datas vem do banco
+        public DateTime? DataCriacao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
+        public DateTime? DataUltimoLogin { get; set; }  // vazio = nunca fez login
+
+        public bool PodeEditar { get; set; }            // true = mostra os botoes Editar/Excluir
+        public bool EstaBloqueado => Status == "Bloqueado";
+
+        // texto que aparece no card
+        public string UltimoLogin
+        {
+            get
+            {
+                if (DataUltimoLogin.HasValue)
+                {
+                    return "Último login: " + DataUltimoLogin.Value.ToString("dd/MM/yyyy 'às' HH:mm");
+                }
+
+                return "Nenhum acesso registrado";
+            }
+        }
+    }
+
+    // Dados de cada linha da auditoria
+    public class RegistroAuditoria
+    {
+        public string DataHora { get; set; }            // BANCO DE DADOS: vem do banco (ja formatada em texto)
+        public string Responsavel { get; set; }
+        public string Operacao { get; set; }
+        public string Registro { get; set; }
+        public string ValorAnterior { get; set; }
+        public string NovoValor { get; set; }           // nos eventos de login guarda o resultado (Sucesso/Falha)
+        public string Categoria { get; set; }           // "Alteração" ou "Autenticação"
+    }
 
     /// <summary>
     /// Lógica interna para Dashboard.xaml
     /// </summary>
     public partial class Dashboard : Window
     {
-       
-
         // BANCO DE DADOS: coloque aqui a string de conexao
-        private string connectionString = "";
+        private string connectionString = "";//
 
         private const string Admin = "Administrador";
         private const string Comum = "Comum";
@@ -41,10 +82,12 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         private const int MinUsuario = 3;
         private const int MinSenha = 8;
 
-        // QUEM ESTA LOGADO
+        private const string PadraoEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+     
         // BANCO DE DADOS: pegar essas informacoes da tela de login
         private bool souAdmin = true;
-        private string usuarioLogado = "maria";
+        private string usuarioLogado = "maria";   // sem o @
 
         // Listas na memoria
         private List<UsuarioCard> usuarios = new List<UsuarioCard>();
@@ -56,25 +99,23 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         // So deixa os filtros funcionarem depois que a tela terminou de carregar
         private bool pronto = false;
 
-      
-
         public Dashboard()
         {
             InitializeComponent();
-
-            nomeusuariotelainferior.Text = usuarioLogado;
-            // BANCO DE DADOS: carregar a imagem do usuario logado (imagem_usuario_)
 
             AplicarPermissoes();
             CarregarAvatares();
             CarregarUsuarios();
             CarregarAuditoria();
+            MostrarUsuarioLogado();
 
             pronto = true;
             AtualizarLista();
         }
 
-       
+        // =====================================================
+        //  CARREGAMENTO INICIAL
+        // =====================================================
 
         // Esconde (Collapsed) o que o usuario comum nao pode usar
         private void AplicarPermissoes()
@@ -85,8 +126,14 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             auditoria.Visibility = soAdmin;
 
             // Na tela de senha: admin escolhe o usuario, comum digita a senha atual
-            painelUsuarioAlvo.Visibility = soAdmin;
-            painelSenhaAtual.Visibility = souAdmin ? Visibility.Collapsed : Visibility.Visible;
+            painelUsuarioAlvo.Visibility = soAdmin; //um if 
+            painelSenhaAtual.Visibility = souAdmin ? Visibility.Collapsed : Visibility.Visible; // um else
+        }
+
+        // Define se os botoes do card aparecem (so admin)
+        private void AplicarPermissaoNoCard(UsuarioCard u)
+        {
+            u.PodeEditar = souAdmin;
         }
 
         // Avatares que o administrador pode escolher no cadastro
@@ -104,12 +151,66 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
         private void CarregarUsuarios()
         {
-           
+            usuarios.Clear();
+
+            // ==========================================================
+            // BANCO DE DADOS: buscar todos os usuarios e colocar na lista "usuarios"
+            // (Id, Nome, Usuario com @, Email, Tipo, Status, AvatarPath e as 3 datas)
+            // Para cada usuario carregado, chame: AplicarPermissaoNoCard(u);
+            //
+            //
+            // ==========================================================
         }
 
-        
+        private void CarregarAuditoria()
+        {
+            registros.Clear();
 
-      
+            // ==========================================================
+            // BANCO DE DADOS: buscar os registros de auditoria e colocar na lista "registros"
+            // (inclui os eventos de login: sucesso, tentativa invalida e bloqueio)
+            //
+            //
+            // ==========================================================
+        }
+
+        // Mostra na barra lateral o nome e a imagem de quem esta logado
+        private void MostrarUsuarioLogado()
+        {
+            UsuarioCard logado = usuarios.FirstOrDefault(u => u.Usuario == "@" + usuarioLogado);
+
+            if (logado == null)
+            {
+                // ainda nao veio do banco: mostra so o que ja sabemos
+                nomeusuariotelainferior.Text = usuarioLogado;
+                nomeusuariotelainferior.ToolTip = "@" + usuarioLogado + " - " + (souAdmin ? Admin : Comum);
+                return;
+            }
+
+            nomeusuariotelainferior.Text = logado.Nome;
+
+            // passar o mouse mostra o resto das informacoes do usuario logado
+            nomeusuariotelainferior.ToolTip = logado.Usuario + " - " + logado.Tipo + "\n" + logado.UltimoLogin;
+
+            imagem_usuario_.ImageSource = CarregarImagem(logado.AvatarPath);
+        }
+
+        // Cria a imagem a partir do caminho (se o arquivo nao existir, devolve null e nao quebra)
+        private BitmapImage CarregarImagem(string caminho)
+        {
+            try
+            {
+                return new BitmapImage(new Uri(caminho, UriKind.Absolute));
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // =====================================================
+        //  TROCA DE TELAS
+        // =====================================================
 
         // So uma tela fica Visible, todas as outras ficam Collapsed
         private void MostrarTela(Grid tela)
@@ -153,6 +254,8 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         {
             if (!souAdmin) return; // so administrador entra aqui
 
+            // BANCO DE DADOS: buscar os registros de auditoria atualizados (CarregarAuditoria)
+
             AtualizarAuditoria();
             MostrarTela(gridAuditoria);
         }
@@ -165,7 +268,10 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
         private void SairSim_Click(object sender, RoutedEventArgs e)
         {
-           
+            // Quando existir a tela de login, abra ela aqui:
+            // Login login = new Login();
+            // login.Show();
+            this.Close();
         }
 
         private void SairNao_Click(object sender, RoutedEventArgs e)
@@ -173,12 +279,14 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             MostrarTela(gridLista);
         }
 
-        
+        // =====================================================
+        //  LISTA DE USUARIOS (filtro + paginas)
+        // =====================================================
 
-        // filtro 
+        // filtro
         private void AplicarFiltro(object sender, RoutedEventArgs e)
         {
-            if (!pronto) return; 
+            if (!pronto) return; // a tela ainda esta carregando
 
             paginaAtual = 1;
             AtualizarLista();
@@ -193,9 +301,9 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         // Devolve so os usuarios que passam na busca e nos filtros
         private List<UsuarioCard> ObterFiltrados()
         {
-            string busca = txtBusca.Text.Trim().ToLower();
-            string perfil = LerCombo(cmbPerfil);
-            string status = LerCombo(cmbStatus);
+            string busca = txtBusca.Text.Trim().ToLower();  //texto digitado na caixa de busca
+            string perfil = LerCombo(cmbPerfil);            //atalhos da combobox
+            string status = LerCombo(cmbStatus);            //atalhos da combobox
 
             return usuarios.Where(u =>
                 (busca == "" || u.Nome.ToLower().Contains(busca)
@@ -210,13 +318,14 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         {
             List<UsuarioCard> filtrados = ObterFiltrados();
 
-           
+            // Math.Ceiling arredonda para cima; (double) transforma em decimal para a divisao nao arredondar sozinha
+            // PorPagina = numero fixo de usuarios por pagina; Math.Max garante que seja pelo menos 1
             totalPaginas = Math.Max(1, (int)Math.Ceiling(filtrados.Count / (double)PorPagina));
 
-           
+            // garante que a pagina atual existe
             paginaAtual = Math.Min(Math.Max(paginaAtual, 1), totalPaginas);
 
-            
+            // pega so os usuarios da pagina atual
             listaCards.ItemsSource = null;
             listaCards.ItemsSource = filtrados
                 .Skip((paginaAtual - 1) * PorPagina)
@@ -228,16 +337,15 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             MontarBotoesPagina();
         }
 
-        
         private void MontarBotoesPagina()
         {
             painelPaginas.Children.Clear();
 
             for (int i = 1; i <= totalPaginas; i++)
-            {
+            {// cria um botao para cada pagina
                 Button b = new Button();
-                b.Content = i.ToString();
-                b.Tag = i;
+                b.Content = i.ToString();     //texto do botao
+                b.Tag = i;                    //numero da pagina (usado no clique)
                 b.Width = 30;
                 b.Height = 28;
                 b.Margin = new Thickness(3, 0, 3, 0);
@@ -252,7 +360,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
                 painelPaginas.Children.Add(b);
             }
 
-            
+            // if ternario: condicao ? valor se verdadeiro : valor se falso
             btnAnterior.Visibility = paginaAtual > 1 ? Visibility.Visible : Visibility.Collapsed;
             btnProxima.Visibility = paginaAtual < totalPaginas ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -278,7 +386,9 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             AtualizarLista();
         }
 
-        
+        // =====================================================
+        //  BOTOES DENTRO DOS CARDS
+        // =====================================================
 
         // Pega o usuario do card onde o botao foi clicado
         private UsuarioCard UsuarioDoBotao(object sender)
@@ -286,10 +396,16 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             return (UsuarioCard)((FrameworkElement)sender).DataContext;
         }
 
-        
+        // Quantos administradores ATIVOS existem
+        private int ContarAdminsAtivos()
+        {
+            return usuarios.Count(x => x.Tipo == Admin && x.Status == Ativo);
+        }
+
+        // True se "u" e o unico administrador ativo (nao pode ser excluido)
         private bool EhUltimoAdmin(UsuarioCard u)
         {
-            return u.Tipo == Admin && usuarios.Count(x => x.Tipo == Admin) == 1;
+            return u.Tipo == Admin && u.Status == Ativo && ContarAdminsAtivos() == 1;
         }
 
         private void Editar_Click(object sender, RoutedEventArgs e)
@@ -298,14 +414,8 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
             UsuarioCard u = UsuarioDoBotao(sender);
 
-            // Ainda nao tem tela de edicao
+            // Ainda nao tem tela de edicao. Quando tiver, abra ela aqui.
             MessageBox.Show("Editar: " + u.Nome);
-
-            // ==========================================================
-            // BANCO DE DADOS: atualizar os dados do usuario no banco
-            // (lembre de registrar na auditoria o valor anterior e o novo)
-            //
-            // ==========================================================
         }
 
         private void Excluir_Click(object sender, RoutedEventArgs e)
@@ -354,20 +464,28 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
             UsuarioCard u = UsuarioDoBotao(sender);
 
-            // ==========================================================
-            // BANCO DE DADOS: mudar o status para Ativo e zerar as tentativas de login
-            //
-            //
-            // ==========================================================
+            try
+            {
+                // ==========================================================
+                // BANCO DE DADOS: mudar o status para Ativo e zerar o contador
+                // de tentativas de login invalidas (use u.Id)
+                //
+                // ==========================================================
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao acessar o banco: " + ex.Message);
+                return;
+            }
 
             u.Status = Ativo;
             RegistrarAuditoria("Desbloqueio de usuário", u.Usuario, Bloqueado, Ativo);
             AtualizarLista();
         }
 
-        #endregion
-
-        #region Cadastro de usuario
+        // =====================================================
+        //  CADASTRO DE USUARIO
+        // =====================================================
 
         // Devolve a mensagem do primeiro erro encontrado, ou null se estiver tudo certo
         private string ValidarCadastro(string nome, string usuario, string email, string senha, string confirma)
@@ -378,7 +496,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             if (usuario.Length < MinUsuario) return $"O nome de usuário deve possuir no mínimo {MinUsuario} caracteres.";
 
             if (email == "") return "O campo E-mail é obrigatório.";
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) return "Informe um e-mail em formato válido.";
+            if (!Regex.IsMatch(email, PadraoEmail)) return "Informe um e-mail em formato válido.";
 
             string erroSenha = ValidarSenha(senha, confirma, "Senha", "Confirmação da senha");
             if (erroSenha != null) return erroSenha;
@@ -429,10 +547,11 @@ namespace Sistema_de_Gerenciamento_de_Usuários
                 Email = email,
                 Tipo = tipo,
                 Status = status,
-                UltimoLogin = "Nenhum acesso registrado",
-                AvatarPath = listaAvatares.SelectedItem.ToString(),
-                PodeEditar = souAdmin
+                AvatarPath = listaAvatares.SelectedItem.ToString()
+                // BANCO DE DADOS: DataCriacao, DataAlteracao e DataUltimoLogin vem do banco
             };
+
+            AplicarPermissaoNoCard(novo);
 
             // ==========================================================
             // SEGURANCA: transformar "senha" em hash (ex: BCrypt) antes de salvar.
@@ -446,7 +565,6 @@ namespace Sistema_de_Gerenciamento_de_Usuários
                 // ==========================================================
                 // BANCO DE DADOS: salvar o novo usuario (com o hash da senha)
                 // e guardar o Id gerado em "novo.Id"
-                //
                 //
                 // ==========================================================
             }
@@ -474,16 +592,16 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             listaAvatares.SelectedItem = null;
         }
 
-        #endregion
-
-        #region Auditoria
+        // =====================================================
+        //  AUDITORIA
+        // =====================================================
 
         // Guarda uma linha nova na auditoria (NUNCA coloque senha aqui)
         private void RegistrarAuditoria(string operacao, string registro, string anterior, string novo, string categoria = CatAlteracao)
         {
             RegistroAuditoria r = new RegistroAuditoria
             {
-                DataHora = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                DataHora = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),   // BANCO DE DADOS: a data e hora vem do banco (apague esta linha quando ligar)
                 Responsavel = usuarioLogado,
                 Operacao = operacao,
                 Registro = registro,
@@ -520,9 +638,9 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             AtualizarAuditoria();
         }
 
-        #endregion
-
-        #region Redefinir senha
+        // =====================================================
+        //  REDEFINIR SENHA
+        // =====================================================
 
         private void RedefinirSenha_Click(object sender, RoutedEventArgs e)
         {
@@ -596,9 +714,9 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             Mensagem(txtMsgSenha, "Senha redefinida.", false);
         }
 
-        #endregion
-
-        #region Ajudantes
+        // =====================================================
+        //  AJUDANTES
+        // =====================================================
 
         // Mensagem na tela (vermelha = erro, verde = sucesso)
         private void Mensagem(TextBlock caixa, string texto, bool erro)
@@ -606,7 +724,5 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             caixa.Foreground = erro ? Brushes.LightPink : Brushes.LightGreen;
             caixa.Text = texto;
         }
-
-        #endregion
     }
 }
