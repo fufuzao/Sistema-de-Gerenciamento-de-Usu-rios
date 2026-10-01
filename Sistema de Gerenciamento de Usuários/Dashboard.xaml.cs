@@ -268,9 +268,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
         private void SairSim_Click(object sender, RoutedEventArgs e)
         {
-            // Quando existir a tela de login, abra ela aqui:
-            // Login login = new Login();
-            // login.Show();
+            
             this.Close();
         }
 

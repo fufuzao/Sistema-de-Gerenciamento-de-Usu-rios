@@ -77,18 +77,6 @@
     <Compile Include="Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tela de Auditoria Logs.xaml.cs">
-      <DependentUpon>Tela de Auditoria Logs.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tela de Cadastro de Usuário.xaml.cs">
-      <DependentUpon>Tela de Cadastro de Usuário.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tela de Edição de Usuário.xaml.cs">
-      <DependentUpon>Tela de Edição de Usuário.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Tela de Listagem de Usuários.xaml.cs">
-      <DependentUpon>Tela de Listagem de Usuários.xaml</DependentUpon>
-    </Compile>
     <Compile Include="teladelogin.xaml.cs">
       <DependentUpon>teladelogin.xaml</DependentUpon>
     </Compile>
@@ -108,22 +96,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Tela de Auditoria Logs.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tela de Cadastro de Usuário.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tela de Edição de Usuário.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Tela de Listagem de Usuários.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="teladelogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
