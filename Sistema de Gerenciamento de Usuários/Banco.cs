@@ -10,7 +10,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
     public static class Banco
     {
         // string de conexao do MySQL
-        public static string connectionString = "Server=localhost;Port=3307;Database=gerenciamento de usuarios;Uid=root;Pwd=;";
+        public static string connectionString = "Server=localhost;Port=3307;Database=login;Uid=root;Pwd=;";
 
         private const string Colunas = "id, nome, usuario, email, tipo, status, avatar, tentativas_invalidas, data_criacao, data_alteracao, ultimo_login";
 
