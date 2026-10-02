@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    /// Lógica interna para Window1.xaml
+    /// Lógica interna para teladelogin.xaml
 
-    public partial class Window1 : Window
+    public partial class teladelogin : Window
     {
-        public Window1()
+        public teladelogin()
         {
             InitializeComponent();
         }

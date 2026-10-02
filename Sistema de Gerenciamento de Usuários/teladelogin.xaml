@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.Window1"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.teladelogin"
         mc:Ignorable="d"
         Title="Window1" Height="450" Width="800" Foreground="{x:Null}">
     <Grid x:Name="telalogin" Background="#FF2F651C" >

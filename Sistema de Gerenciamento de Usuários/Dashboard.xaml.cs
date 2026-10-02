@@ -68,7 +68,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
     public partial class Dashboard : Window
     {
         // BANCO DE DADOS: coloque aqui a string de conexao
-        private string connectionString = "";//
+        private string connectionString = "Server=localhost;Port=3307;Database=login;Uid=root;Pwd=;";
 
         private const string Admin = "Administrador";
         private const string Comum = "Comum";
@@ -268,8 +268,8 @@ namespace Sistema_de_Gerenciamento_de_Usuários
 
         private void SairSim_Click(object sender, RoutedEventArgs e)
         {
-            teladelogin teladelogin = new teladelogin();
-            teladelogin.Show();
+            teladelogin Vteladelogin = new teladelogin();
+            Vteladelogin.Show();
             this.Close();
         }
 
@@ -278,11 +278,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             MostrarTela(gridLista);
         }
 
-        // =====================================================
-        //  LISTA DE USUARIOS (filtro + paginas)
-        // =====================================================
-
-        // filtro
+       
         private void AplicarFiltro(object sender, RoutedEventArgs e)
         {
             if (!pronto) return; // a tela ainda esta carregando
