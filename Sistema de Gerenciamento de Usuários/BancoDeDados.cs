@@ -19,8 +19,8 @@ namespace Sistema_de_Gerenciamento_de_Usuários
     // =====================================================================
     public static class BancoDeDados
     {
-        // BANCO DE DADOS: endereço do MySQL (porta 3307, banco "login", usuário root sem senha)
-        public const string ConnectionString = "Server=localhost;Port=3307;Database=login;Uid=root;Pwd=;";
+        // BANCO DE DADOS: endereço do MySQL (porta 3306 do XAMPP, banco "login", usuário root sem senha)
+        public const string ConnectionString = "Server=localhost;Port=3306;Database=login;Uid=root;Pwd=;";
 
         // Colunas lidas sempre que buscamos usuários (a senha_hash NÃO está aqui de propósito)
         private const string ColunasUsuario =

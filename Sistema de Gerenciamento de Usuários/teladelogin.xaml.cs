@@ -41,7 +41,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
                 btnEntrar.IsEnabled = false;
                 btnTentarNovamente.Visibility = Visibility.Visible;
                 MostrarMensagem("Não foi possível conectar ao banco de dados. " +
-                                "Verifique se o MySQL está ligado (porta 3307) e se o banco \"login\" foi criado.\n" +
+                                "Verifique se o MySQL está ligado (porta 3306) e se o banco \"login\" foi criado.\n" +
                                 "Detalhe: " + ex.Message, true);
                 return;
             }
