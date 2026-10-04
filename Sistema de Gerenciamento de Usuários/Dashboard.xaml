@@ -1,358 +1,437 @@
-﻿<Window
+<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.Dashboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.Dashboard"
-        mc:Ignorable="d"
-        Title="Dashboard" Height="446" Width="800" Background="#FF019288">
+        Title="Dashboard" Width="800" Height="600"
+        Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        Loaded="Janela_Loaded">
+
+    <!-- ===================================================================
+         DASHBOARD (ADMINISTRADOR)
+         Barra lateral à esquerda + área de conteúdo à direita.
+         A área de conteúdo tem 6 "telas" (Grids). Só UMA fica Visible;
+         as outras ficam Collapsed (quem troca é o método MostrarTela).
+         =================================================================== -->
 
     <Window.Resources>
-        <!-- ETIQUETA DE STATUS DO CARD -->
-        <Style x:Key="EtiquetaStatus" TargetType="Border">
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Padding" Value="8,2"/>
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="Background" Value="#CFD8DC"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Status}" Value="Ativo">
-                    <Setter Property="Background" Value="#C8E6C9"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Status}" Value="Bloqueado">
-                    <Setter Property="Background" Value="#FFCDD2"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Estilos.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <!-- BOTOES DO CARD SO PARA ADMIN -->
-        <Style x:Key="SoParaAdmin" TargetType="StackPanel">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding PodeEditar}" Value="False">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+            <!-- Molde do CARD de usuário (com os botões do administrador) -->
+            <DataTemplate x:Key="CardUsuario">
+                <Border Style="{StaticResource Cartao}">
+                    <StackPanel VerticalAlignment="Center">
 
-        <Style x:Key="SoSeBloqueado" TargetType="Button">
-            <Setter Property="Visibility" Value="Collapsed"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding EstaBloqueado}" Value="True">
-                    <Setter Property="Visibility" Value="Visible"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- ESTILOS DOS FORMULARIOS -->
-        <Style x:Key="Titulo" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="11,10,0,0"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
-
-        <Style x:Key="Rotulo" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="0,8,0,2"/>
-        </Style>
-
-        <Style x:Key="CampoTexto" TargetType="TextBox">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Background" Value="#26FFFFFF"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="CaretBrush" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="CampoSenha" TargetType="PasswordBox">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Background" Value="#26FFFFFF"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="CaretBrush" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="Mensagem" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="Margin" Value="0,8,0,0"/>
-        </Style>
-
-        <!-- ESTILOS DA TABELA DE AUDITORIA -->
-        <Style x:Key="CabecalhoGrid" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#33FFFFFF"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,6"/>
-        </Style>
-
-        <Style x:Key="CelulaGrid" TargetType="DataGridCell">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#55FFFFFF"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-
-    <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Center" Width="780" Background="#FF019288">
-
-        <!-- ================= BARRA LATERAL ================= -->
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="411" VerticalAlignment="Center" Width="141">
-            <DockPanel>
-                <!-- Usuario logado (rodape) -->
-                <Border DockPanel.Dock="Bottom" Background="#22FFFFFF" CornerRadius="8" Margin="5" Padding="5">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="36" Height="36">
+                        <!-- avatar redondo -->
+                        <Ellipse Width="52" Height="52">
                             <Ellipse.Fill>
-                                <ImageBrush x:Name="imagem_usuario_" Stretch="UniformToFill"/>
+                                <ImageBrush ImageSource="{Binding ImagemAvatar}" Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
-                        <TextBlock x:Name="nomeusuariotelainferior" Text="Usuário" Foreground="White"
-                                   Width="75" Margin="6,0,0,0" VerticalAlignment="Center"
+
+                        <TextBlock Text="{Binding NomeCompleto}" Foreground="White" FontSize="15" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding Arroba}" Foreground="White" FontSize="12" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Email}" Foreground="White" FontSize="12" HorizontalAlignment="Center"
                                    TextTrimming="CharacterEllipsis"/>
+
+                        <!-- etiquetas (pílulas) de tipo e status -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
+                            <Border Style="{StaticResource EtiquetaTipo}">
+                                <TextBlock Text="{Binding Tipo}" FontSize="11"/>
+                            </Border>
+                            <Border Style="{StaticResource EtiquetaStatus}">
+                                <TextBlock Text="{Binding Status}" FontSize="11"/>
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding TextoUltimoLogin}" Foreground="White" FontSize="11"
+                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+
+                        <!-- botões: [Editar] [Excluir], ou [Editar] [Desbloquear] se estiver bloqueado -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                            <Button Style="{StaticResource BotaoCard}" Click="BtnEditarCard_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE70F;" Style="{StaticResource Icone}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Editar"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource BotaoExcluirCard}" Click="BtnExcluirCard_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74D;" Style="{StaticResource Icone}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Excluir"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource BotaoDesbloquearCard}" Click="BtnDesbloquearCard_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE785;" Style="{StaticResource Icone}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Desbloquear"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
 
-                <!-- Botoes -->
-                <StackPanel VerticalAlignment="Top" Margin="0,5,0,0">
-                    <Button x:Name="listadeusuarios" Content="Usuários" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_2"/>
-                    <Button x:Name="cadastrousuario" Content="Cadastrar usuário" Height="40" Width="129" Margin="5,0,0,10" Click="cadastrousuario_Click"/>
-                    <Button x:Name="auditoria" Content="Auditoria" Height="40" Width="129" Margin="5,0,0,10" Click="auditoria_Click"/>
-                    <Button x:Name="redefinirsenha" Content="Redefinir senha" Height="40" Width="129" Margin="5,0,0,10" Click="Button_Click_3"/>
-                    <Button x:Name="sair" Content="Sair" Height="40" Width="129" Margin="5,0,0,10" Click="sair_Click"/>
+    <Grid Width="780" Height="565" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <!-- ============================ BARRA LATERAL ============================ -->
+        <Border Width="141" HorizontalAlignment="Left" BorderBrush="{StaticResource CorDivisoria}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="0,8,0,8">
+
+                <!-- Bloco do usuário logado (embaixo). Clicar abre "Meu perfil". -->
+                <Button x:Name="btnBlocoUsuario" DockPanel.Dock="Bottom" Style="{StaticResource BlocoUsuario}"
+                        Width="129" ToolTip="Abrir meu perfil" Click="BtnBlocoUsuario_Click">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="elpAvatarLogado" Width="36" Height="36" Fill="#FF004D40"/>
+                            <StackPanel Width="70" Margin="7,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="txtNomeLogado" Foreground="White" FontSize="12" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="txtTipoLogado" Foreground="White" FontSize="11" Opacity="0.85"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock x:Name="txtArrobaLogado" Foreground="White" FontSize="10" Margin="0,6,0,0"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock x:Name="txtNivelLogado" Foreground="White" FontSize="10" Opacity="0.85"/>
+                        <TextBlock x:Name="txtUltimoLoginLogado" Foreground="White" FontSize="10" Opacity="0.85"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Botões do menu (em cima) -->
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <Button x:Name="btnMenuUsuarios" Content="Usuários" Style="{StaticResource BotaoMenu}" Click="BtnMenuUsuarios_Click"/>
+                    <Button x:Name="btnMenuCadastrar" Content="Cadastrar usuário" Style="{StaticResource BotaoMenu}" Click="BtnMenuCadastrar_Click"/>
+                    <Button x:Name="btnMenuAuditoria" Content="Auditoria" Style="{StaticResource BotaoMenu}" Click="BtnMenuAuditoria_Click"/>
+                    <Button x:Name="btnMenuSenha" Content="Redefinir senha" Style="{StaticResource BotaoMenu}" Click="BtnMenuSenha_Click"/>
+                    <Button x:Name="btnMenuSair" Content="Sair" Style="{StaticResource BotaoMenu}" Click="BtnMenuSair_Click"/>
                 </StackPanel>
             </DockPanel>
         </Border>
 
-        <!-- ================= TELA: LISTA DE USUARIOS ================= -->
-        <Grid x:Name="gridLista" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
+        <!-- ============================ ÁREA DE CONTEÚDO ============================ -->
+        <Grid Width="626" Margin="154,0,0,0" HorizontalAlignment="Left">
 
-            <!-- Busca -->
-            <Border Background="#26FFFFFF" CornerRadius="6" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="367">
-                <TextBox x:Name="txtBusca" Background="Transparent" BorderThickness="0"
-                         Foreground="White" CaretBrush="White" FontSize="13"
-                         Padding="10,0" VerticalContentAlignment="Center"
-                         TextChanged="AplicarFiltro"/>
-            </Border>
+            <!-- ====================== TELA 1: LISTA DE USUÁRIOS ====================== -->
+            <Grid x:Name="gridUsuarios">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>   <!-- busca e filtros -->
+                    <RowDefinition Height="Auto"/>   <!-- contador -->
+                    <RowDefinition Height="*"/>      <!-- cards -->
+                    <RowDefinition Height="Auto"/>   <!-- páginas -->
+                </Grid.RowDefinitions>
 
-            <!-- Filtros -->
-            <ComboBox x:Name="cmbPerfil" HorizontalAlignment="Left" Height="33" Margin="394,10,0,0" VerticalAlignment="Top" Width="109" SelectionChanged="AplicarFiltro">
-                <ComboBoxItem Content="Todos" IsSelected="True"/>
-                <ComboBoxItem Content="Administrador"/>
-                <ComboBoxItem Content="Comum"/>
-            </ComboBox>
-            <ComboBox x:Name="cmbStatus" HorizontalAlignment="Left" Height="33" Margin="517,10,0,0" VerticalAlignment="Top" Width="109" SelectionChanged="AplicarFiltro">
-                <ComboBoxItem Content="Todos" IsSelected="True"/>
-                <ComboBoxItem Content="Ativo"/>
-                <ComboBoxItem Content="Inativo"/>
-                <ComboBoxItem Content="Bloqueado"/>
-            </ComboBox>
+                <!-- Linha de cima: busca + Perfil + Status -->
+                <Grid Grid.Row="0" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="128"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="133"/>
+                    </Grid.ColumnDefinitions>
 
-            <!-- Contador -->
-            <TextBlock x:Name="txtContador" Foreground="White" FontSize="12" Margin="11,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <!-- caixa de busca com lupa (E721) e texto de dica por cima -->
+                    <Grid Grid.Column="0">
+                        <TextBox x:Name="txtBusca" Style="{StaticResource CampoTexto}" Height="38" Padding="34,0,10,0"
+                                 TextChanged="TxtBusca_TextChanged"/>
+                        <TextBlock Text="&#xE721;" Style="{StaticResource Icone}" Foreground="White" FontSize="14"
+                                   Margin="13,0,0,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+                        <TextBlock x:Name="txtDicaBusca" Text="Buscar por nome, usuário ou e-mail" Foreground="White"
+                                   Opacity="0.85" FontSize="13" Margin="37,0,0,0" VerticalAlignment="Center"
+                                   IsHitTestVisible="False"/>
+                    </Grid>
 
-            <!-- Cards -->
-            <ScrollViewer Margin="11,72,0,45" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="listaCards">
+                    <ComboBox x:Name="cmbPerfil" Grid.Column="2" Height="38" Tag="Perfil: " SelectedIndex="0"
+                              SelectionChanged="CmbFiltro_SelectionChanged">
+                        <ComboBoxItem Content="Todos"/>
+                        <ComboBoxItem Content="Administrador"/>
+                        <ComboBoxItem Content="Comum"/>
+                    </ComboBox>
+
+                    <ComboBox x:Name="cmbStatus" Grid.Column="4" Height="38" Tag="Status: " SelectedIndex="0"
+                              SelectionChanged="CmbFiltro_SelectionChanged">
+                        <ComboBoxItem Content="Todos"/>
+                        <ComboBoxItem Content="Ativo"/>
+                        <ComboBoxItem Content="Inativo"/>
+                        <ComboBoxItem Content="Bloqueado"/>
+                    </ComboBox>
+                </Grid>
+
+                <!-- contador ("4 usuários") e aviso de sucesso/erro das ações dos cards -->
+                <Grid Grid.Row="1" Margin="0,10,0,6">
+                    <TextBlock x:Name="txtContador" Text="0 usuários" Foreground="White" FontSize="12" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="txtAvisoLista" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right"
+                               TextTrimming="CharacterEllipsis" MaxWidth="480"/>
+                </Grid>
+
+                <!-- os cards: grade de 2 colunas x 2 linhas = 4 por página -->
+                <ItemsControl x:Name="icCards" Grid.Row="2" Margin="-5" ItemTemplate="{StaticResource CardUsuario}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel/>
+                            <UniformGrid Rows="2" Columns="2"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                </ItemsControl>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="140" Margin="0,0,10,10" Padding="8" Background="#22FFFFFF" CornerRadius="10">
-                                <StackPanel>
-                                    <Ellipse Width="50" Height="50" Margin="0,0,0,6">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding AvatarPath}" Stretch="UniformToFill"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                <TextBlock x:Name="txtSemResultados" Grid.Row="2" Text="Nenhum usuário encontrado."
+                           Foreground="White" FontSize="14" Opacity="0.85"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
 
-                                    <TextBlock Text="{Binding Nome}" Foreground="White" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Usuario}" Foreground="White" FontSize="12" Opacity="0.85" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Email}" Foreground="White" FontSize="11" Opacity="0.85" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,0,6"/>
+                <!-- páginas: "<" 1 2 3 ">" -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,8">
+                    <Button x:Name="btnAnterior" Content="&lt;" Style="{StaticResource BotaoPagina}" Click="BtnAnterior_Click"/>
+                    <StackPanel x:Name="pnlPaginas" Orientation="Horizontal"/>
+                    <Button x:Name="btnProxima" Content="&gt;" Style="{StaticResource BotaoPagina}" Click="BtnProxima_Click"/>
+                </StackPanel>
+            </Grid>
 
-                                    <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,6">
-                                        <Border Background="#B2DFDB" CornerRadius="10" Padding="8,2" Margin="2">
-                                            <TextBlock Text="{Binding Tipo}" FontSize="11" Foreground="#004D40"/>
-                                        </Border>
-                                        <Border Style="{StaticResource EtiquetaStatus}">
-                                            <TextBlock Text="{Binding Status}" FontSize="11" Foreground="#263238"/>
-                                        </Border>
-                                    </WrapPanel>
+            <!-- ====================== TELA 2: CADASTRAR USUÁRIO ====================== -->
+            <Grid x:Name="gridCadastro" Visibility="Collapsed">
+                <Border Background="{StaticResource CorCartao}" CornerRadius="14" Padding="22,16" Margin="0,8,0,8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="22"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding UltimoLogin}" Foreground="White" FontSize="10" Opacity="0.8" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,8"/>
+                        <StackPanel Grid.ColumnSpan="3">
+                            <TextBlock Text="Cadastrar usuário" Style="{StaticResource Titulo}"/>
+                            <TextBlock Text="Todos os campos são obrigatórios. A senha é guardada criptografada (hash BCrypt)."
+                                       Style="{StaticResource Subtitulo}"/>
+                        </StackPanel>
 
-                                    <StackPanel Style="{StaticResource SoParaAdmin}">
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Content="Editar" Width="58" Margin="2,0" Click="Editar_Click"/>
-                                            <Button Content="Excluir" Width="58" Margin="2,0" Click="Excluir_Click"/>
-                                        </StackPanel>
-                                        <Button Content="Desbloquear" Width="120" Margin="0,6,0,0"
-                                                Style="{StaticResource SoSeBloqueado}" Click="Desbloquear_Click"/>
-                                    </StackPanel>
+                        <!-- esquerda: dados e senha -->
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtNomeCadastro" Style="{StaticResource CampoTexto}"/>
+
+                            <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtUsuarioCadastro" Style="{StaticResource CampoTexto}"/>
+
+                            <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtEmailCadastro" Style="{StaticResource CampoTexto}"/>
+
+                            <TextBlock Text="Senha (mínimo 8 caracteres)" Style="{StaticResource Rotulo}"/>
+                            <PasswordBox x:Name="pwdSenhaCadastro" Style="{StaticResource CampoSenha}"/>
+
+                            <TextBlock Text="Confirmação da senha" Style="{StaticResource Rotulo}"/>
+                            <PasswordBox x:Name="pwdConfirmacaoCadastro" Style="{StaticResource CampoSenha}"/>
+                        </StackPanel>
+
+                        <!-- direita: tipo, status, avatar e botões -->
+                        <StackPanel Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="Tipo de usuário" Style="{StaticResource Rotulo}"/>
+                            <ComboBox x:Name="cmbTipoCadastro" SelectedIndex="1">
+                                <ComboBoxItem Content="Administrador"/>
+                                <ComboBoxItem Content="Comum"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Status" Style="{StaticResource Rotulo}"/>
+                            <ComboBox x:Name="cmbStatusCadastro" SelectedIndex="0">
+                                <ComboBoxItem Content="Ativo"/>
+                                <ComboBoxItem Content="Inativo"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
+                            <ListBox x:Name="lstAvataresCadastro" Style="{StaticResource ListaAvatares}"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button x:Name="btnCadastrar" Content="Cadastrar" Style="{StaticResource BotaoPrincipal}"
+                                        Click="BtnCadastrar_Click"/>
+                                <Button x:Name="btnLimparCadastro" Content="Limpar" Margin="8,0,0,0"
+                                        Click="BtnLimparCadastro_Click"/>
+                            </StackPanel>
+
+                            <TextBlock x:Name="txtMensagemCadastro" Style="{StaticResource Mensagem}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ====================== TELA 3: EDITAR USUÁRIO / MEU PERFIL ====================== -->
+            <Grid x:Name="gridEdicao" Visibility="Collapsed">
+                <Border Background="{StaticResource CorCartao}" CornerRadius="14" Padding="22,16" Margin="0,8,0,8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="22"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.ColumnSpan="3">
+                            <TextBlock x:Name="txtTituloEdicao" Text="Editar usuário" Style="{StaticResource Titulo}"/>
+                            <TextBlock x:Name="txtInfoEdicao" Style="{StaticResource Subtitulo}"/>
+                        </StackPanel>
+
+                        <!-- esquerda: dados (a senha NÃO aparece aqui) -->
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtNomeEdicao" Style="{StaticResource CampoTexto}"/>
+
+                            <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtUsuarioEdicao" Style="{StaticResource CampoTexto}"/>
+
+                            <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
+                            <TextBox x:Name="txtEmailEdicao" Style="{StaticResource CampoTexto}"/>
+
+                            <Border Background="#1AFFFFFF" CornerRadius="8" Padding="10,8" Margin="0,14,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE72E;" Style="{StaticResource Icone}" Foreground="White" Margin="0,0,8,0"/>
+                                    <TextBlock Foreground="White" FontSize="11" TextWrapping="Wrap" Width="230"
+                                               Text="A senha não é exibida nem alterada aqui. Use o menu &quot;Redefinir senha&quot;."/>
                                 </StackPanel>
                             </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                        </StackPanel>
 
-            <!-- Paginas -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8">
-                <Button x:Name="btnAnterior" Content="&lt;" Width="30" Height="28" Margin="3,0" Click="Anterior_Click"/>
-                <StackPanel x:Name="painelPaginas" Orientation="Horizontal"/>
-                <Button x:Name="btnProxima" Content="&gt;" Width="30" Height="28" Margin="3,0" Click="Proxima_Click"/>
-            </StackPanel>
-        </Grid>
+                        <!-- direita: tipo/permissões, status, avatar e botões -->
+                        <StackPanel Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="Tipo de usuário (perfil e permissões)" Style="{StaticResource Rotulo}"/>
+                            <ComboBox x:Name="cmbTipoEdicao">
+                                <ComboBoxItem Content="Administrador"/>
+                                <ComboBoxItem Content="Comum"/>
+                            </ComboBox>
 
-        <!-- ================= TELA: CADASTRO DE USUARIO ================= -->
-        <Grid x:Name="gridCadastro" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
-            <TextBlock Text="Cadastrar usuário" Style="{StaticResource Titulo}"/>
+                            <TextBlock Text="Status" Style="{StaticResource Rotulo}"/>
+                            <ComboBox x:Name="cmbStatusEdicao">
+                                <ComboBoxItem Content="Ativo"/>
+                                <ComboBoxItem Content="Inativo"/>
+                                <ComboBoxItem Content="Bloqueado"/>
+                            </ComboBox>
 
-            <!-- Coluna esquerda -->
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="11,42,0,0">
-                <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
-                <TextBox x:Name="txtNomeCad" Style="{StaticResource CampoTexto}"/>
+                            <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
+                            <ListBox x:Name="lstAvataresEdicao" Style="{StaticResource ListaAvatares}"/>
 
-                <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
-                <TextBox x:Name="txtUsuarioCad" Style="{StaticResource CampoTexto}"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button x:Name="btnSalvarEdicao" Content="Salvar alterações" Style="{StaticResource BotaoPrincipal}"
+                                        Click="BtnSalvarEdicao_Click"/>
+                                <Button x:Name="btnCancelarEdicao" Content="Cancelar" Margin="8,0,0,0"
+                                        Click="BtnCancelarEdicao_Click"/>
+                            </StackPanel>
 
-                <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
-                <TextBox x:Name="txtEmailCad" Style="{StaticResource CampoTexto}"/>
+                            <TextBlock x:Name="txtMensagemEdicao" Style="{StaticResource Mensagem}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
 
-                <TextBlock Text="Senha" Style="{StaticResource Rotulo}"/>
-                <PasswordBox x:Name="pwdSenhaCad" Style="{StaticResource CampoSenha}"/>
+            <!-- ====================== TELA 4: AUDITORIA ====================== -->
+            <Grid x:Name="gridAuditoria" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Text="Confirmação da senha" Style="{StaticResource Rotulo}"/>
-                <PasswordBox x:Name="pwdConfirmaCad" Style="{StaticResource CampoSenha}"/>
-            </StackPanel>
-
-            <!-- Coluna direita -->
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Margin="320,42,0,0">
-                <TextBlock Text="Tipo de usuário" Style="{StaticResource Rotulo}"/>
-                <ComboBox x:Name="cmbTipoCad" Height="30" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Administrador"/>
-                    <ComboBoxItem Content="Comum" IsSelected="True"/>
-                </ComboBox>
-
-                <TextBlock Text="Status" Style="{StaticResource Rotulo}"/>
-                <ComboBox x:Name="cmbStatusCad" Height="30" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Ativo" IsSelected="True"/>
-                    <ComboBoxItem Content="Inativo"/>
-                </ComboBox>
-
-                <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
-                <ListBox x:Name="listaAvatares" Background="Transparent" BorderThickness="0"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Ellipse Width="36" Height="36" Margin="2">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <Button Content="Cadastrar" Width="140" Height="32" HorizontalAlignment="Left" Margin="0,12,0,0" Click="Cadastrar_Click"/>
-                <TextBlock x:Name="txtMsgCadastro" Style="{StaticResource Mensagem}"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- ================= TELA: AUDITORIA ================= -->
-        <Grid x:Name="gridAuditoria" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
-            <TextBlock Text="Auditoria" Style="{StaticResource Titulo}"/>
-
-            <ComboBox x:Name="cmbCategoria" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="130" Margin="481,10,0,0"
-                      VerticalContentAlignment="Center" SelectionChanged="FiltrarAuditoria">
-                <ComboBoxItem Content="Todos" IsSelected="True"/>
-                <ComboBoxItem Content="Alteração"/>
-                <ComboBoxItem Content="Autenticação"/>
-            </ComboBox>
-
-            <DataGrid x:Name="dgAuditoria" Margin="11,50,11,10"
-                      AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
-                      HeadersVisibility="Column" GridLinesVisibility="None" RowHeaderWidth="0"
-                      Background="Transparent" BorderThickness="0" Foreground="White"
-                      RowBackground="#22FFFFFF" AlternatingRowBackground="#11FFFFFF"
-                      ColumnHeaderStyle="{StaticResource CabecalhoGrid}"
-                      CellStyle="{StaticResource CelulaGrid}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Data e hora" Binding="{Binding DataHora}" Width="105"/>
-                    <DataGridTextColumn Header="Usuário" Binding="{Binding Responsavel}" Width="70"/>
-                    <DataGridTextColumn Header="Operação" Binding="{Binding Operacao}" Width="*"/>
-                    <DataGridTextColumn Header="Registro" Binding="{Binding Registro}" Width="70"/>
-                    <DataGridTextColumn Header="Anterior" Binding="{Binding ValorAnterior}" Width="85"/>
-                    <DataGridTextColumn Header="Novo valor" Binding="{Binding NovoValor}" Width="95"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-
-        <!-- ================= TELA: REDEFINIR SENHA ================= -->
-        <Grid x:Name="gridSenha" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
-            <TextBlock Text="Redefinir senha" Style="{StaticResource Titulo}"/>
-
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Margin="11,42,0,0">
-
-                <!-- So admin: escolhe de quem e a senha -->
-                <StackPanel x:Name="painelUsuarioAlvo">
-                    <TextBlock Text="Usuário" Style="{StaticResource Rotulo}"/>
-                    <ComboBox x:Name="cmbUsuarioAlvo" Height="30" DisplayMemberPath="Nome" VerticalContentAlignment="Center"/>
-                </StackPanel>
-
-                <!-- So usuario comum: confirma a senha atual -->
-                <StackPanel x:Name="painelSenhaAtual" Visibility="Collapsed">
-                    <TextBlock Text="Senha atual" Style="{StaticResource Rotulo}"/>
-                    <PasswordBox x:Name="pwdAtual" Style="{StaticResource CampoSenha}"/>
-                </StackPanel>
-
-                <TextBlock Text="Nova senha" Style="{StaticResource Rotulo}"/>
-                <PasswordBox x:Name="pwdNova" Style="{StaticResource CampoSenha}"/>
-
-                <TextBlock Text="Confirmação da nova senha" Style="{StaticResource Rotulo}"/>
-                <PasswordBox x:Name="pwdConfirmaNova" Style="{StaticResource CampoSenha}"/>
-
-                <Button Content="Redefinir senha" Width="140" Height="32" HorizontalAlignment="Left" Margin="0,12,0,0" Click="RedefinirSenha_Click"/>
-                <TextBlock x:Name="txtMsgSenha" Style="{StaticResource Mensagem}"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- ================= TELA: SAIR ================= -->
-        <Grid x:Name="gridSair" Visibility="Collapsed" HorizontalAlignment="Left" Height="411" Margin="154,0,0,0" VerticalAlignment="Center" Width="626">
-            <Border Background="#22FFFFFF" CornerRadius="10" Padding="24" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel>
-                    <TextBlock Text="Deseja realmente sair?" Foreground="White" FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,16"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Sim" Width="90" Height="32" Margin="4,0" Click="SairSim_Click"/>
-                        <Button Content="Cancelar" Width="90" Height="32" Margin="4,0" Click="SairNao_Click"/>
+                <Grid Grid.Row="0" Margin="0,8,0,8">
+                    <StackPanel HorizontalAlignment="Left">
+                        <TextBlock Text="Auditoria" Style="{StaticResource Titulo}"/>
+                        <TextBlock x:Name="txtContadorAuditoria" Style="{StaticResource Subtitulo}" Margin="0"/>
                     </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <ComboBox x:Name="cmbCategoria" Width="200" Height="38" Tag="Categoria: " SelectedIndex="0"
+                                  SelectionChanged="CmbCategoria_SelectionChanged">
+                            <ComboBoxItem Content="Todos"/>
+                            <ComboBoxItem Content="Alteração"/>
+                            <ComboBoxItem Content="Autenticação"/>
+                        </ComboBox>
+                        <Button x:Name="btnAtualizarAuditoria" Height="38" Margin="8,0,0,0" ToolTip="Atualizar"
+                                Click="BtnAtualizarAuditoria_Click">
+                            <TextBlock Text="&#xE72C;" Style="{StaticResource Icone}"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
 
+                <DataGrid x:Name="dgAuditoria" Grid.Row="1" Margin="0,0,0,8"
+                          AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                          CanUserResizeRows="False" SelectionMode="Single"
+                          HeadersVisibility="Column" GridLinesVisibility="None" RowHeaderWidth="0"
+                          Background="Transparent" BorderThickness="0" Foreground="White"
+                          RowBackground="#22FFFFFF" AlternatingRowBackground="#11FFFFFF"
+                          HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+                          ColumnHeaderStyle="{StaticResource CabecalhoTabela}"
+                          CellStyle="{StaticResource CelulaTabela}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Data e hora" Binding="{Binding TextoDataHora}" Width="88"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                        <DataGridTextColumn Header="Responsável" Binding="{Binding Responsavel}" Width="88"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                        <DataGridTextColumn Header="Operação" Binding="{Binding Operacao}" Width="*"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                        <DataGridTextColumn Header="Registro" Binding="{Binding RegistroAfetado}" Width="80"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                        <DataGridTextColumn Header="Valor anterior" Binding="{Binding ValorAnterior}" Width="105"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                        <DataGridTextColumn Header="Novo valor" Binding="{Binding NovoValor}" Width="105"
+                                            ElementStyle="{StaticResource TextoCelula}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- ====================== TELA 5: REDEFINIR SENHA ====================== -->
+            <Grid x:Name="gridSenha" Visibility="Collapsed">
+                <Border Background="{StaticResource CorCartao}" CornerRadius="14" Padding="22,16" Width="360"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock Text="Redefinir senha" Style="{StaticResource Titulo}"/>
+                        <TextBlock Text="Escolha o usuário e defina uma nova senha. A senha antiga nunca é exibida."
+                                   Style="{StaticResource Subtitulo}"/>
+
+                        <TextBlock Text="Usuário" Style="{StaticResource Rotulo}"/>
+                        <ComboBox x:Name="cmbUsuarioSenha">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TextoEscolha}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Text="Nova senha (mínimo 8 caracteres)" Style="{StaticResource Rotulo}"/>
+                        <PasswordBox x:Name="pwdNovaSenha" Style="{StaticResource CampoSenha}"/>
+
+                        <TextBlock Text="Confirmação da nova senha" Style="{StaticResource Rotulo}"/>
+                        <PasswordBox x:Name="pwdConfirmacaoSenha" Style="{StaticResource CampoSenha}"/>
+
+                        <Button x:Name="btnRedefinirSenha" Content="Redefinir senha" Style="{StaticResource BotaoPrincipal}"
+                                HorizontalAlignment="Left" Margin="0,16,0,0" Click="BtnRedefinirSenha_Click"/>
+                        <TextBlock x:Name="txtMensagemSenha" Style="{StaticResource Mensagem}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ====================== TELA 6: SAIR (confirmação) ====================== -->
+            <Grid x:Name="gridSair" Visibility="Collapsed">
+                <Border Background="{StaticResource CorCartao}" CornerRadius="14" Padding="28,24" Width="320"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock Text="&#xE7E8;" Style="{StaticResource Icone}" Foreground="White" FontSize="30"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Deseja realmente sair?" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" Margin="0,12,0,4"/>
+                        <TextBlock Text="Você voltará para a tela de login." Style="{StaticResource Subtitulo}"
+                                   HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="btnSairSim" Content="Sim, sair" Style="{StaticResource BotaoPrincipal}"
+                                    Width="110" Click="BtnSairSim_Click"/>
+                            <Button x:Name="btnSairNao" Content="Cancelar" Width="110" Margin="8,0,0,0"
+                                    Click="BtnSairNao_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
