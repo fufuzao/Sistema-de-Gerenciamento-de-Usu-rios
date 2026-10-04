@@ -1,19 +1,53 @@
-﻿<Window
+<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.teladelogin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="Sistema_de_Gerenciamento_de_Usuários.teladelogin"
-        mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800" Foreground="{x:Null}">
-    <Grid x:Name="telalogin" Background="#FF2F651C" >
-        <Button x:Name="botaologar" Content="Login" HorizontalAlignment="Center" Height="37" Margin="0,329,0,0" VerticalAlignment="Top" Width="92" Click="botaologar_Click"/>
-        <TextBlock x:Name="textologin" Height="19" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold" Background="#FF2F651C"><Run Language="pt-br" Text="Gmail"/></TextBlock>
-        <TextBlock x:Name="txtboxsenha" HorizontalAlignment="Center" Height="26" Margin="0,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" TextAlignment="Center" FontWeight="Bold"><Run Language="pt-br" Text="Senha "/></TextBlock>
-        <TextBox x:Name="usuario" HorizontalAlignment="Center" Height="42" Margin="0,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" RenderTransformOrigin="0.522,0.549" />
+        Title="Login" Width="800" Height="600"
+        Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        Loaded="Janela_Loaded">
 
-      
+    <!-- Traz os estilos compartilhados (cores, botões, caixas de texto...) -->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Estilos.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
+    <Grid Width="780" Height="565" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <!-- Cartão central do login -->
+        <Border Width="360" Background="{StaticResource CorCartao}" CornerRadius="14" Padding="30,26"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel>
+
+                <!-- Ícone redondo (E77B = pessoa) -->
+                <Border Width="64" Height="64" CornerRadius="32" Background="#FF004D40" HorizontalAlignment="Center">
+                    <TextBlock Text="&#xE77B;" Style="{StaticResource Icone}" FontSize="28" Foreground="White"
+                               HorizontalAlignment="Center"/>
+                </Border>
+
+                <TextBlock Text="Gerenciamento de Usuários" Style="{StaticResource Titulo}"
+                           HorizontalAlignment="Center" Margin="0,12,0,2"/>
+                <TextBlock Text="Entre com o seu usuário e senha" Style="{StaticResource Subtitulo}"
+                           HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Usuário" Style="{StaticResource Rotulo}"/>
+                <TextBox x:Name="txtUsuario" Style="{StaticResource CampoTexto}"/>
+
+                <TextBlock Text="Senha" Style="{StaticResource Rotulo}"/>
+                <PasswordBox x:Name="pwdSenha" Style="{StaticResource CampoSenha}"/>
+
+                <!-- IsDefault="True": apertar Enter no teclado clica neste botão -->
+                <Button x:Name="btnEntrar" Content="Entrar" Style="{StaticResource BotaoPrincipal}"
+                        IsDefault="True" Margin="0,18,0,0" Click="BtnEntrar_Click"/>
+
+                <!-- Só aparece (Visible) quando o banco não respondeu -->
+                <Button x:Name="btnTentarNovamente" Content="Tentar conectar de novo" Margin="0,8,0,0"
+                        Visibility="Collapsed" Click="BtnTentarNovamente_Click"/>
+
+                <TextBlock x:Name="txtMensagem" Style="{StaticResource Mensagem}" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

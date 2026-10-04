@@ -1,8 +1,9 @@
-﻿<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.primeirocadastro"
+<Window x:Class="Sistema_de_Gerenciamento_de_Usuários.primeirocadastro"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Primeiro cadastro" Height="446" Width="700"
-        Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Primeiro cadastro" Width="800" Height="600"
+        Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        Loaded="Janela_Loaded">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -12,52 +13,67 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Margin="20,10,20,10">
-        <TextBlock Text="Primeiro cadastro" Style="{StaticResource Titulo}" Margin="0,0,0,0"/>
-        <TextBlock Text="Crie o primeiro usuário do sistema. Ele será o administrador e poderá cadastrar os próximos."
-                   Foreground="White" FontSize="12" TextWrapping="Wrap" Margin="0,30,0,0" VerticalAlignment="Top"/>
+    <Grid Width="780" Height="565" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-        <!-- Coluna esquerda -->
-        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Margin="0,55,0,0">
-            <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
-            <TextBox x:Name="txtNome" Style="{StaticResource CampoTexto}"/>
+        <Border Background="{StaticResource CorCartao}" CornerRadius="14" Padding="28,22" Width="640"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
-            <TextBox x:Name="txtUsuario" Style="{StaticResource CampoTexto}"/>
+                <!-- Cabeçalho -->
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,6">
+                    <TextBlock Text="Primeiro cadastro" Style="{StaticResource Titulo}"/>
+                    <TextBlock Style="{StaticResource Subtitulo}"
+                               Text="O sistema ainda não tem usuários. Crie o primeiro: ele será o ADMINISTRADOR (ativo) e poderá cadastrar os próximos."/>
+                </StackPanel>
 
-            <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
-            <TextBox x:Name="txtEmail" Style="{StaticResource CampoTexto}"/>
+                <!-- Coluna da esquerda: dados -->
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Nome completo" Style="{StaticResource Rotulo}"/>
+                    <TextBox x:Name="txtNome" Style="{StaticResource CampoTexto}"/>
 
-            <TextBlock Text="Senha" Style="{StaticResource Rotulo}"/>
-            <PasswordBox x:Name="pwdSenha" Style="{StaticResource CampoSenha}"/>
+                    <TextBlock Text="Nome de usuário" Style="{StaticResource Rotulo}"/>
+                    <TextBox x:Name="txtUsuario" Style="{StaticResource CampoTexto}"/>
 
-            <TextBlock Text="Confirmação da senha" Style="{StaticResource Rotulo}"/>
-            <PasswordBox x:Name="pwdConfirma" Style="{StaticResource CampoSenha}"/>
-        </StackPanel>
+                    <TextBlock Text="E-mail" Style="{StaticResource Rotulo}"/>
+                    <TextBox x:Name="txtEmail" Style="{StaticResource CampoTexto}"/>
 
-        <!-- Coluna direita -->
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Width="300" Margin="0,55,0,0">
-            <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
-            <ListBox x:Name="listaAvatares" Background="Transparent" BorderThickness="0"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Ellipse Width="40" Height="40" Margin="3">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding Imagem}" Stretch="UniformToFill"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    <TextBlock Text="Senha (mínimo 8 caracteres)" Style="{StaticResource Rotulo}"/>
+                    <PasswordBox x:Name="pwdSenha" Style="{StaticResource CampoSenha}"/>
 
-            <Button Content="Criar administrador" Width="160" Height="34" HorizontalAlignment="Left" Margin="0,20,0,0" Click="Criar_Click"/>
-            <TextBlock x:Name="txtMsg" Style="{StaticResource Mensagem}"/>
-        </StackPanel>
+                    <TextBlock Text="Confirmação da senha" Style="{StaticResource Rotulo}"/>
+                    <PasswordBox x:Name="pwdConfirmacao" Style="{StaticResource CampoSenha}"/>
+                </StackPanel>
+
+                <!-- Coluna da direita: avatar, tipo fixo e botão -->
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="Imagem de perfil" Style="{StaticResource Rotulo}"/>
+                    <ListBox x:Name="lstAvatares" Style="{StaticResource ListaAvatares}"/>
+
+                    <TextBlock Text="Tipo e status" Style="{StaticResource Rotulo}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#FFFFE082" CornerRadius="10" Padding="10,2" Margin="0,0,6,0">
+                            <TextBlock Text="Administrador" Foreground="#FF5D4037" FontSize="12"/>
+                        </Border>
+                        <Border Background="#FFC8E6C9" CornerRadius="10" Padding="10,2">
+                            <TextBlock Text="Ativo" Foreground="#FF1B5E20" FontSize="12"/>
+                        </Border>
+                    </StackPanel>
+
+                    <Button x:Name="btnCriar" Content="Criar administrador" Style="{StaticResource BotaoPrincipal}"
+                            IsDefault="True" HorizontalAlignment="Left" Margin="0,24,0,0" Click="BtnCriar_Click"/>
+
+                    <TextBlock x:Name="txtMensagem" Style="{StaticResource Mensagem}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

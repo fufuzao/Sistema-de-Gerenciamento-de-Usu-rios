@@ -1,16 +1,11 @@
-﻿<Application x:Class="Sistema_de_Gerenciamento_de_Usuários.App"
+<Application x:Class="Sistema_de_Gerenciamento_de_Usuários.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Sistema_de_Gerenciamento_de_Usuários"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             StartupUri="Dashboard.xaml">
+             StartupUri="teladelogin.xaml">
+    <!-- O programa sempre começa pela tela de login.
+         Se o banco não tiver nenhum usuário, a própria tela de login
+         abre o "Primeiro cadastro". Os estilos ficam em Estilos.xaml,
+         que cada janela inclui (não usamos nenhum tema pronto). -->
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Dark" />
-                <ui:ControlsDictionary />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
     </Application.Resources>
 </Application>
-

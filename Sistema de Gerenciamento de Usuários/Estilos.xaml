@@ -1,0 +1,569 @@
+<!--
+    =====================================================================
+     ESTILOS COMPARTILHADOS
+     Todas as janelas incluem este arquivo com:
+        <ResourceDictionary Source="Estilos.xaml"/>
+     Aqui ficam as cores e os "moldes" (ControlTemplate) dos botões,
+     caixas de texto, ComboBox, itens de lista, etiquetas e tabela.
+     Como criamos os nossos próprios moldes, o visual fica igual em
+     qualquer computador (não depende do tema do Windows).
+    =====================================================================
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================ CORES ============================ -->
+    <SolidColorBrush x:Key="CorFundo" Color="#FF019288"/>
+    <SolidColorBrush x:Key="CorCartao" Color="#22FFFFFF"/>
+    <SolidColorBrush x:Key="CorCampo" Color="#26FFFFFF"/>
+    <SolidColorBrush x:Key="CorBotao" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="CorBotaoHover" Color="#4DFFFFFF"/>
+    <SolidColorBrush x:Key="CorBotaoAtivo" Color="#66FFFFFF"/>
+    <SolidColorBrush x:Key="CorDivisoria" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="CorLista" Color="#FF00796B"/>
+    <SolidColorBrush x:Key="CorErro" Color="#FFFFCDD2"/>
+    <SolidColorBrush x:Key="CorSucesso" Color="#FFC8E6C9"/>
+
+    <!-- Fonte dos ícones (já vem no Windows 10 e 11) -->
+    <FontFamily x:Key="FonteIcones">Segoe MDL2 Assets</FontFamily>
+
+    <!-- ============================ TEXTOS ============================ -->
+
+    <!-- Título de cada tela -->
+    <Style x:Key="Titulo" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <!-- Texto pequeno abaixo do título -->
+    <Style x:Key="Subtitulo" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Opacity" Value="0.85"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- Nome de um campo (em cima da caixa) -->
+    <Style x:Key="Rotulo" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="0,8,0,3"/>
+    </Style>
+
+    <!-- Mensagem de erro/sucesso (a cor é trocada pelo código) -->
+    <Style x:Key="Mensagem" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0,8,0,0"/>
+    </Style>
+
+    <!-- Ícone (fonte Segoe MDL2 Assets) -->
+    <Style x:Key="Icone" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FonteIcones}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ===================== CAIXAS DE TEXTO E SENHA ===================== -->
+    <!-- PART_ContentHost é o nome obrigatório do lugar onde o texto aparece -->
+    <Style x:Key="CampoTexto" TargetType="TextBox">
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CaretBrush" Value="White"/>
+        <Setter Property="SelectionBrush" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Moldura" Background="{StaticResource CorCampo}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Moldura" Property="BorderBrush" Value="#AAFFFFFF"/>
+                        </Trigger>
+                        <Trigger Property="IsReadOnly" Value="True">
+                            <Setter TargetName="Moldura" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CampoSenha" TargetType="PasswordBox">
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CaretBrush" Value="White"/>
+        <Setter Property="SelectionBrush" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Moldura" Background="{StaticResource CorCampo}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Moldura" Property="BorderBrush" Value="#AAFFFFFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================ BOTÕES ============================ -->
+
+    <!-- Botão padrão (vale para TODOS os botões que não escolhem outro estilo) -->
+    <Style TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource CorBotao}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="{TemplateBinding Background}" CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoAtivo}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botão de destaque (Entrar, Salvar, Cadastrar...): branco com texto verde -->
+    <Style x:Key="BotaoPrincipal" TargetType="Button">
+        <Setter Property="Foreground" Value="#FF00695C"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Padding" Value="18,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="White" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="#FFE0F2F1"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="#FFB2DFDB"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botões do menu lateral (129 x 40).
+         O botão da tela aberta recebe Tag="Ativo" no código: fica mais claro
+         e ganha a barra branca de 3 px na esquerda. -->
+    <Style x:Key="BotaoMenu" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Width" Value="129"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="{StaticResource CorBotao}" CornerRadius="8"
+                            BorderBrush="White" BorderThickness="0">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoHover}"/>
+                        </Trigger>
+                        <Trigger Property="Tag" Value="Ativo">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoAtivo}"/>
+                            <Setter TargetName="Fundo" Property="BorderThickness" Value="3,0,0,0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botões de dentro do card (Editar / Excluir) -->
+    <Style x:Key="BotaoCard" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource CorBotao}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="Margin" Value="4,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="{TemplateBinding Background}" CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Opacity" Value="0.8"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Fundo" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botão Desbloquear: amarelo, só aparece no card de usuário bloqueado -->
+    <Style x:Key="BotaoDesbloquear" TargetType="Button" BasedOn="{StaticResource BotaoCard}">
+        <Setter Property="Background" Value="#FFFFF59D"/>
+        <Setter Property="Foreground" Value="#FF5D4037"/>
+    </Style>
+
+    <!-- Botões de página (1, 2, 3...). A página atual recebe Tag="Atual" no código. -->
+    <Style x:Key="BotaoPagina" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Margin" Value="3,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="{StaticResource CorBotao}" CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoHover}"/>
+                        </Trigger>
+                        <Trigger Property="Tag" Value="Atual">
+                            <Setter TargetName="Fundo" Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="#FF00796B"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================ COMBOBOX ============================ -->
+    <!-- Vale para TODOS os ComboBox. O texto do Tag aparece antes do valor:
+         Tag="Perfil: " mostra "Perfil: Todos". Sem Tag, mostra só o valor. -->
+    <Style TargetType="ComboBox">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="MaxDropDownHeight" Value="220"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <!-- botão que abre e fecha a lista -->
+                        <ToggleButton Focusable="False" ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border x:Name="Fundo" Background="{StaticResource CorCampo}" CornerRadius="8"/>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotao}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!-- texto: "Perfil: " + item escolhido -->
+                        <StackPanel Orientation="Horizontal" Margin="12,0,28,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                            <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White"/>
+                            <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              TextElement.Foreground="White"/>
+                        </StackPanel>
+
+                        <!-- setinha (ícone E70D) -->
+                        <TextBlock Text="&#xE70D;" Style="{StaticResource Icone}" FontSize="10" Foreground="White"
+                                   HorizontalAlignment="Right" Margin="0,0,12,0" IsHitTestVisible="False"/>
+
+                        <!-- a lista que abre embaixo -->
+                        <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                               AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                            <Border Background="{StaticResource CorLista}" CornerRadius="8" Margin="0,4,0,0" Padding="4"
+                                    MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Cada item da lista do ComboBox -->
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Fundo" Background="Transparent" CornerRadius="6" Padding="10,6">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotao}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotaoHover}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===================== ESCOLHA DE AVATAR (ListBox) ===================== -->
+
+    <!-- Cada avatar da lista: redondo, e o ESCOLHIDO ganha um aro branco -->
+    <Style x:Key="ItemAvatar" TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="0,0,6,6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Aro" Width="52" Height="52" CornerRadius="26"
+                            BorderBrush="Transparent" BorderThickness="3" Padding="2">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Aro" Property="BorderBrush" Value="#80FFFFFF"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Aro" Property="BorderBrush" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- A lista de avatares (sem fundo, itens lado a lado) -->
+    <Style x:Key="ListaAvatares" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ItemAvatar}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBox">
+                    <ItemsPresenter/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Ellipse Width="42" Height="42" ToolTip="{Binding Nome}">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Imagem}" Stretch="UniformToFill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===================== ETIQUETAS (PÍLULAS) DO CARD ===================== -->
+
+    <!-- Tipo: Administrador = amarelo; Comum = verde-água -->
+    <Style x:Key="EtiquetaTipo" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="10,2"/>
+        <Setter Property="Margin" Value="3,0"/>
+        <Setter Property="Background" Value="#FFB2DFDB"/>
+        <Setter Property="TextElement.Foreground" Value="#FF004D40"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Tipo}" Value="Administrador">
+                <Setter Property="Background" Value="#FFFFE082"/>
+                <Setter Property="TextElement.Foreground" Value="#FF5D4037"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Status: Ativo = verde; Bloqueado = vermelho claro; Inativo = cinza -->
+    <Style x:Key="EtiquetaStatus" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="10,2"/>
+        <Setter Property="Margin" Value="3,0"/>
+        <Setter Property="Background" Value="#FFC8E6C9"/>
+        <Setter Property="TextElement.Foreground" Value="#FF1B5E20"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Bloqueado">
+                <Setter Property="Background" Value="#FFFFCDD2"/>
+                <Setter Property="TextElement.Foreground" Value="#FFB71C1C"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Inativo">
+                <Setter Property="Background" Value="#FFCFD8DC"/>
+                <Setter Property="TextElement.Foreground" Value="#FF455A64"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- O card inteiro: fica mais apagado quando o usuário está Inativo -->
+    <Style x:Key="Cartao" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CorCartao}"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="5"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Inativo">
+                <Setter Property="Opacity" Value="0.6"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Botão Excluir do card: some (Collapsed) quando o usuário está bloqueado -->
+    <Style x:Key="BotaoExcluirCard" TargetType="Button" BasedOn="{StaticResource BotaoCard}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Bloqueado">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Botão Desbloquear do card: só aparece (Visible) quando o usuário está bloqueado -->
+    <Style x:Key="BotaoDesbloquearCard" TargetType="Button" BasedOn="{StaticResource BotaoDesbloquear}">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Bloqueado">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ===================== TABELA DA AUDITORIA (DataGrid) ===================== -->
+
+    <Style x:Key="CabecalhoTabela" TargetType="DataGridColumnHeader">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Border Background="{StaticResource CorBotao}" Padding="8,7">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CelulaTabela" TargetType="DataGridCell">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border x:Name="Fundo" Background="Transparent" Padding="8,5">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="#33FFFFFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Texto das células quebra a linha quando não cabe -->
+    <Style x:Key="TextoCelula" TargetType="TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- ===================== BLOCO DO USUÁRIO LOGADO ===================== -->
+    <!-- Botão sem cara de botão (o bloco inteiro é clicável e abre "Meu perfil") -->
+    <Style x:Key="BlocoUsuario" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Fundo" Background="{StaticResource CorCartao}" CornerRadius="10" Padding="8">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Fundo" Property="Background" Value="{StaticResource CorBotao}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

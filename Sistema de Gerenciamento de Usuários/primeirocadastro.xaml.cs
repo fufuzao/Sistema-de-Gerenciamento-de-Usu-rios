@@ -1,133 +1,113 @@
-﻿using System;
+using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    /// <summary>
-    /// Tela que cria o primeiro usuario (administrador).
-    /// So aparece quando o banco nao tem nenhum usuario.
-    /// </summary>
+    // =====================================================================
+    //  PRIMEIRO CADASTRO
+    //  Só aparece quando a tabela "usuarios" está vazia (quem abre é a
+    //  tela de login). Cria o primeiro usuário SEMPRE como Administrador
+    //  e Ativo. Depois disso o programa sempre abre direto no login.
+    // =====================================================================
     public partial class primeirocadastro : Window
     {
         public primeirocadastro()
         {
             InitializeComponent();
-            Loaded += primeirocadastro_Loaded;
 
-            listaAvatares.ItemsSource = Avatares.Lista;
+            // as 5 imagens do sistema na lista de escolha
+            lstAvatares.ItemsSource = Avatares.Lista();
         }
 
-        // Se ja existe usuario, esta tela nao deve aparecer: vai para o login
-        private void primeirocadastro_Loaded(object sender, RoutedEventArgs e)
+        // Segurança: se já existe usuário, esta tela não pode ser usada
+        private void Janela_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (Banco.TemUsuarios() == true)
-                {
-                    IrParaLogin();
-                }
-            }
-            catch (Exception ex)
-            {
-                Mensagem("Erro ao acessar o banco: " + ex.Message, true);
-            }
-        }
-
-        private void IrParaLogin()
-        {
-            teladelogin login = new teladelogin();
-            login.Show();
-            this.Close();
-        }
-
-        private void Criar_Click(object sender, RoutedEventArgs e)
-        {
-            string nome = txtNome.Text.Trim();
-            string usuario = txtUsuario.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            string senha = pwdSenha.Password;
-            string confirma = pwdConfirma.Password;
-            AvatarItem avatar = listaAvatares.SelectedItem as AvatarItem;
-
-            // ----- validacoes (para no primeiro erro) -----
-            string erro = Validacao.ErroNome(nome);
-
-            if (erro == null)
-            {
-                erro = Validacao.ErroUsuario(usuario);
-            }
-
-            if (erro == null)
-            {
-                erro = Validacao.ErroEmail(email);
-            }
-
-            if (erro == null)
-            {
-                erro = Validacao.ErroSenha(senha, confirma, "Senha", "Confirmação da senha");
-            }
-
-            if (erro == null && avatar == null)
-            {
-                erro = "Selecione uma imagem de perfil.";
-            }
-
-            if (erro != null)
-            {
-                Mensagem(erro, true);
-                return;
-            }
-
-            try
-            {
-                // seguranca: se alguem ja criou o primeiro usuario, nao deixa criar outro administrador por aqui
-                if (Banco.TemUsuarios() == true)
+                // BANCO DE DADOS: conta os usuários
+                if (BancoDeDados.ContarUsuarios() > 0)
                 {
                     IrParaLogin();
                     return;
                 }
-
-                UsuarioCard novo = new UsuarioCard();
-                novo.Nome = nome;
-                novo.Usuario = "@" + usuario;
-                novo.Email = email;
-                novo.Tipo = "Administrador";   // o primeiro usuario e sempre administrador
-                novo.Status = "Ativo";
-                novo.AvatarNome = avatar.Nome;
-
-                // a senha vira hash (BCrypt) antes de ir para o banco
-                string hash = BCrypt.Net.BCrypt.HashPassword(senha);
-
-                Banco.CriarUsuario(novo, hash);
-                Banco.RegistrarAuditoria(usuario, "Cadastro de usuário", "@" + usuario, "—", "Administrador / Ativo", "Alteração");
             }
             catch (Exception ex)
             {
-                Mensagem("Erro ao acessar o banco: " + ex.Message, true);
+                MostrarMensagem("Erro ao acessar o banco de dados: " + ex.Message, true);
+                btnCriar.IsEnabled = false;
                 return;
             }
 
-            MessageBox.Show("Administrador criado! Agora faça o login.", "Primeiro cadastro", MessageBoxButton.OK, MessageBoxImage.Information);
+            txtNome.Focus();
+        }
+
+        private void BtnCriar_Click(object sender, RoutedEventArgs e)
+        {
+            // monta o usuário com o que foi digitado
+            Usuario novo = new Usuario();
+            novo.NomeCompleto = txtNome.Text;
+            novo.NomeUsuario = txtUsuario.Text;
+            novo.Email = txtEmail.Text;
+            novo.Avatar = AvatarEscolhido();
+            // o tipo (Administrador) e o status (Ativo) são definidos na classe Operacoes
+
+            string erro;
+
+            try
+            {
+                // BANCO DE DADOS: valida, grava com a senha em hash e registra na auditoria
+                erro = Operacoes.CriarPrimeiroAdministrador(novo, pwdSenha.Password, pwdConfirmacao.Password);
+            }
+            catch (Exception ex)
+            {
+                MostrarMensagem("Erro ao acessar o banco de dados: " + ex.Message, true);
+                return;
+            }
+
+            if (erro != "")
+            {
+                MostrarMensagem(erro, true);
+                return;
+            }
+
+            MessageBox.Show("Administrador criado com sucesso! Agora faça o login.", "Primeiro cadastro",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
             IrParaLogin();
         }
 
-        // Mensagem na tela (vermelha = erro, verde = sucesso)
-        private void Mensagem(string texto, bool erro)
+        // Nome do avatar selecionado ("" se nenhum foi escolhido)
+        private string AvatarEscolhido()
         {
-            txtMsg.Foreground = erro ? Brushes.LightPink : Brushes.LightGreen;
-            // é a mesma coisa que:
-            // if (erro == true)
-            // {
-            //     txtMsg.Foreground = Brushes.LightPink;
-            // }
-            // else
-            // {
-            //     txtMsg.Foreground = Brushes.LightGreen;
-            // }
+            OpcaoAvatar opcao = lstAvatares.SelectedItem as OpcaoAvatar;   // "as" devolve null se nada foi escolhido
 
-            txtMsg.Text = texto;
+            if (opcao == null)
+            {
+                return "";
+            }
+
+            return opcao.Nome;
+        }
+
+        private void IrParaLogin()
+        {
+            teladelogin telaLogin = new teladelogin();
+            telaLogin.Show();
+            this.Close();
+        }
+
+        private void MostrarMensagem(string texto, bool ehErro)
+        {
+            if (ehErro)
+            {
+                txtMensagem.Foreground = (Brush)FindResource("CorErro");
+            }
+            else
+            {
+                txtMensagem.Foreground = (Brush)FindResource("CorSucesso");
+            }
+
+            txtMensagem.Text = texto;
         }
     }
 }
