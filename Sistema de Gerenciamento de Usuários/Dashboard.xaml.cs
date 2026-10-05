@@ -67,9 +67,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
             MostrarTela(gridUsuarios, btnMenuUsuarios);
         }
 
-        // =================================================================
-        //  TROCA DE TELAS
-        // =================================================================
+   
 
         // Deixa só a tela pedida Visible e todas as outras Collapsed.
         // botaoDoMenu = botão do menu que fica destacado (pode ser null)

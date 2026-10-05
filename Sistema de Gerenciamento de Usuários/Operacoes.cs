@@ -6,9 +6,7 @@ namespace Sistema_de_Gerenciamento_de_Usuários
     {
         private const string SemPermissao = "Você não tem permissão para fazer esta operação.";
 
-        // =================================================================
-        //  CONFERÊNCIA DE PERMISSÃO
-        // =================================================================
+    
 
         // BANCO DE DADOS: lê de novo, no banco, quem está logado.
         // Assim, se outro administrador mudou o tipo ou o status dele,

@@ -5,12 +5,7 @@
         Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
         Loaded="Janela_Loaded">
 
-    <!-- ===================================================================
-         DASHBOARD (ADMINISTRADOR)
-         Barra lateral à esquerda + área de conteúdo à direita.
-         A área de conteúdo tem 6 "telas" (Grids). Só UMA fica Visible;
-         as outras ficam Collapsed (quem troca é o método MostrarTela).
-         =================================================================== -->
+   
 
     <Window.Resources>
         <ResourceDictionary>
