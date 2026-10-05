@@ -6,20 +6,7 @@ using System.Windows.Media;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  DASHBOARD (só para ADMINISTRADOR)
-    //  Telas (Grids) dentro da área de conteúdo:
-    //    gridUsuarios  - cards com busca, filtros e páginas
-    //    gridCadastro  - cadastrar usuário
-    //    gridEdicao    - editar usuário (ou "Meu perfil", quando é ele mesmo)
-    //    gridAuditoria - tabela da auditoria
-    //    gridSenha     - redefinir a senha de qualquer usuário
-    //    gridSair      - confirmação para sair
-    //  Só uma fica Visible; as outras ficam Collapsed (método MostrarTela).
-    //
-    //  As regras e as permissões ficam na classe Operacoes. Esta tela só
-    //  lê os campos, chama a operação e mostra o resultado.
-    // =====================================================================
+    
     public partial class Dashboard : Window
     {
         // Quantos cards aparecem por página (2 colunas x 2 linhas)

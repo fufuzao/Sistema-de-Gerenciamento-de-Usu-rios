@@ -3,15 +3,6 @@ using System.Windows;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  TELA DE LOGIN (é a primeira janela que abre - StartupUri do App.xaml)
-    //  1) Ao abrir: se o banco não tem nenhum usuário, vai para o
-    //     "Primeiro cadastro". Se o banco não responde, avisa e desativa
-    //     o botão Entrar.
-    //  2) Ao clicar em Entrar: a classe Autenticacao faz todas as
-    //     conferências. Se deu certo, o TIPO do usuário decide a janela:
-    //     Administrador -> Dashboard; Comum -> MainWindow.
-    // =====================================================================
     public partial class teladelogin : Window
     {
         public teladelogin()

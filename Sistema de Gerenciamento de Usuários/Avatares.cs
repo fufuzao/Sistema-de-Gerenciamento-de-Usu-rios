@@ -12,14 +12,6 @@ namespace Sistema_de_Gerenciamento_de_Usuários
         public BitmapImage Imagem { get; set; }   // a imagem pronta para mostrar
     }
 
-    // =====================================================================
-    //  AVATARES
-    //  As 5 imagens do sistema ficam DENTRO do código, em texto base64
-    //  (um jeito de escrever os bytes de um arquivo PNG como texto).
-    //  Assim não é preciso adicionar nenhum arquivo de imagem ao projeto.
-    //  O usuário nunca envia imagem: só escolhe uma destas 5.
-    //  No banco fica guardado só o NOME (ex.: "Avatar 03").
-    // =====================================================================
     public static class Avatares
     {
         // Os nomes dos 5 avatares (a posição 0 é o Avatar 01, e assim por diante)

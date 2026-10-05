@@ -5,16 +5,7 @@
         Background="#FF019288" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
         Loaded="Janela_Loaded">
 
-    <!-- ===================================================================
-         MAINWINDOW (USUÁRIO COMUM)
-         Mesmo visual do Dashboard, mas:
-           - os cards são SÓ PARA VER (sem Editar / Excluir / Desbloquear);
-           - "Meu perfil" edita só nome, e-mail e avatar do próprio usuário;
-           - "Redefinir senha" troca a própria senha (pede a senha atual).
-         Telas: gridUsuarios, gridPerfil, gridSenha, gridSair
-         (só uma Visible, as outras Collapsed - método MostrarTela).
-         =================================================================== -->
-
+  
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

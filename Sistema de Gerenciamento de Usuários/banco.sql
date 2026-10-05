@@ -1,14 +1,3 @@
--- =====================================================================
---  SISTEMA DE GERENCIAMENTO DE USUÁRIOS - SCRIPT DO BANCO (MySQL)
---
---  Como usar: abra este arquivo no MySQL Workbench (ou no phpMyAdmin)
---  e execute tudo de uma vez. Ele cria o banco "login" e as duas tabelas.
---
---  ATENÇÃO: as duas linhas DROP TABLE apagam as tabelas antigas (se
---  existirem) para começar do zero. Se você já tem dados que quer
---  guardar, apague essas duas linhas antes de rodar.
--- =====================================================================
-
 CREATE DATABASE IF NOT EXISTS login
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;   -- "ci" = não diferencia maiúsculas de minúsculas (Maria = maria)

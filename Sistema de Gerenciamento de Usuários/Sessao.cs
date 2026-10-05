@@ -1,11 +1,6 @@
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  SESSÃO
-    //  Guarda QUEM está logado enquanto o programa estiver aberto.
-    //  "static" quer dizer que existe uma só, compartilhada por todas as
-    //  janelas: o login preenche, o Dashboard e a MainWindow leem.
-    // =====================================================================
+
     public static class Sessao
     {
         // O usuário que fez login (null = ninguém logado)

@@ -2,21 +2,6 @@ using System.Collections.Generic;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  OPERAÇÕES (REGRAS DO SISTEMA)
-    //  Aqui ficam as ações que mudam dados: cadastrar, editar, excluir,
-    //  desbloquear, trocar senha e editar o próprio perfil.
-    //
-    //  Cada método:
-    //    1) CONFERE A PERMISSÃO no código (não basta esconder o botão!)
-    //    2) valida os campos
-    //    3) aplica as regras (ex.: último administrador)
-    //    4) grava no banco
-    //    5) grava a AUDITORIA
-    //
-    //  Todos devolvem "" (vazio) quando deu certo, ou a mensagem de erro.
-    //  Erros de conexão com o banco viram exceção; as telas usam try/catch.
-    // =====================================================================
     public static class Operacoes
     {
         private const string SemPermissao = "Você não tem permissão para fazer esta operação.";

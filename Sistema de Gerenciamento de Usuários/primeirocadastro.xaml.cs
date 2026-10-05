@@ -4,12 +4,7 @@ using System.Windows.Media;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  PRIMEIRO CADASTRO
-    //  Só aparece quando a tabela "usuarios" está vazia (quem abre é a
-    //  tela de login). Cria o primeiro usuário SEMPRE como Administrador
-    //  e Ativo. Depois disso o programa sempre abre direto no login.
-    // =====================================================================
+
     public partial class primeirocadastro : Window
     {
         public primeirocadastro()

@@ -4,19 +4,7 @@ using MySql.Data.MySqlClient;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  BANCO DE DADOS
-    //  TODO comando SQL do programa fica nesta classe. As telas nunca
-    //  escrevem SQL: elas chamam os métodos daqui (ou das classes
-    //  Autenticacao e Operacoes, que chamam os daqui).
-    //
-    //  SEGURANÇA: todos os comandos usam PARÂMETROS (@nome, @id, ...).
-    //  O valor digitado pelo usuário nunca é "colado" dentro do texto do
-    //  SQL; isso impede o ataque chamado SQL Injection.
-    //
-    //  Se der problema de conexão, o MySQL "lança" uma exceção (erro).
-    //  As telas pegam esse erro com try/catch e mostram uma mensagem.
-    // =====================================================================
+  
     public static class BancoDeDados
     {
         // BANCO DE DADOS: endereço do MySQL (porta 3307, banco "login", usuário root sem senha)

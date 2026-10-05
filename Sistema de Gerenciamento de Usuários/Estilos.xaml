@@ -1,14 +1,5 @@
-<!--
-    =====================================================================
-     ESTILOS COMPARTILHADOS
-     Todas as janelas incluem este arquivo com:
-        <ResourceDictionary Source="Estilos.xaml"/>
-     Aqui ficam as cores e os "moldes" (ControlTemplate) dos botões,
-     caixas de texto, ComboBox, itens de lista, etiquetas e tabela.
-     Como criamos os nossos próprios moldes, o visual fica igual em
-     qualquer computador (não depende do tema do Windows).
-    =====================================================================
--->
+
+
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 

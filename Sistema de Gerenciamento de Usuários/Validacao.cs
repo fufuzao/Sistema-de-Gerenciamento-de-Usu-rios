@@ -1,12 +1,5 @@
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  VALIDAÇÃO
-    //  Cada método confere UM campo e devolve:
-    //    ""  (texto vazio)  -> está tudo certo
-    //    "mensagem"         -> o erro que deve aparecer na tela
-    //  Assim as telas só precisam fazer: if (erro != "") { mostra o erro }
-    // =====================================================================
     public static class Validacao
     {
         public static string ValidarNomeCompleto(string nome)

@@ -2,23 +2,7 @@ using System;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  AUTENTICAÇÃO (LOGIN)
-    //  Segue exatamente a ordem pedida no documento:
-    //    1) o usuário existe?
-    //    2) a senha confere com o hash (BCrypt)?
-    //    3) está ativo?   4) está bloqueado?
-    //    5) quais são as permissões (tipo)?
-    //
-    //  Regras de bloqueio:
-    //    - 3 senhas erradas seguidas em uma conta Ativa => status Bloqueado
-    //    - enquanto bloqueado, o login é recusado
-    //    - só o administrador desbloqueia
-    //    - login com sucesso zera o contador
-    //
-    //  Toda tentativa vira uma linha na auditoria, categoria "Autenticação".
-    //  A coluna novo_valor guarda o RESULTADO: Sucesso, Falha ou Bloqueada.
-    // =====================================================================
+
     public static class Autenticacao
     {
         // Mensagem GENÉRICA: não conta se o erro foi no usuário ou na senha

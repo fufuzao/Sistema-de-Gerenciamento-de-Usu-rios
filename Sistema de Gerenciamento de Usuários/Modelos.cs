@@ -3,13 +3,7 @@ using System.Windows.Media.Imaging;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  MODELOS
-    //  Classes simples que só guardam dados. Cada objeto Usuario é uma
-    //  linha da tabela "usuarios"; cada EventoAuditoria é uma linha da
-    //  tabela "auditoria". As telas mostram esses objetos nos cards e na
-    //  tabela da auditoria através de {Binding NomeDaPropriedade}.
-    // =====================================================================
+    
 
     // Textos fixos usados no sistema inteiro (assim não erramos a digitação)
     public static class Constantes

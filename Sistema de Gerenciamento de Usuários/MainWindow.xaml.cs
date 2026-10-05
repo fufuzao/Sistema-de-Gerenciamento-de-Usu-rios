@@ -6,17 +6,7 @@ using System.Windows.Media;
 
 namespace Sistema_de_Gerenciamento_de_Usuários
 {
-    // =====================================================================
-    //  MAINWINDOW (USUÁRIO COMUM)
-    //  O usuário comum pode:
-    //    - ver todos os usuários (cards SÓ PARA VER);
-    //    - alterar o PRÓPRIO perfil: nome, e-mail e avatar;
-    //    - trocar a PRÓPRIA senha (confirmando a senha atual).
-    //  Ele NÃO cria, NÃO exclui, NÃO desbloqueia e NÃO muda permissões.
-    //
-    //  IMPORTANTE: o id de quem está sendo alterado vem SEMPRE da Sessao
-    //  (dentro da classe Operacoes), nunca de algo que está na tela.
-    // =====================================================================
+   
     public partial class MainWindow : Window
     {
         private const int CardsPorPagina = 4;
