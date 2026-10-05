@@ -53,6 +53,4 @@ CREATE TABLE auditoria (
     KEY ix_auditoria_data (data_hora)
 );
 
--- Pronto! Não é preciso inserir nenhum usuário aqui:
--- ao abrir o programa com a tabela vazia, aparece a tela "Primeiro cadastro",
--- que cria o primeiro administrador com a senha já em hash (BCrypt).
+
